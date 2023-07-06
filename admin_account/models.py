@@ -15,6 +15,7 @@ class CustomAdminUser(AbstractUser, PermissionsMixin):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True, verbose_name='Email Address')
     profile_picture = models.ImageField(upload_to='media', blank=True, null=True)
+    is_trusted = models.BooleanField(default=False)
     verification_code = models.CharField(max_length=100, null=True, blank=True)
 
 

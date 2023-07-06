@@ -48,10 +48,10 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')
-        user = CustomAdminUser.objects.filter(email=email).first()
+        user = CustomAdminUser.objects.filter(email=email, is_trusted=True).first()
         
         if not user or not user.check_password(password):
-            raise serializers.ValidationError('Invalid login credentials')
+            raise serializers.ValidationError('Invalid login credentials or not a verified user')
         
         token = self.get_token(user)
         response = {

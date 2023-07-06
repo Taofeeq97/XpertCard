@@ -24,7 +24,7 @@ def get_client_ip(request):
 @receiver(user_logged_in)
 def log_user_login(sender, request, user, **kwargs):
     message = f"{user.first_name} is logged in with ip:{get_client_ip(request)}"
-    ActivityLog.objects.create(actor=user, action_type=LOGIN, remarks=message)
+    ActivityLog.objects.create(actor=user, action_type=LOGIN)
 
 
 @receiver(user_login_failed)
