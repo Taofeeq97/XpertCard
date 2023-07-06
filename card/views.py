@@ -5,16 +5,17 @@ from rest_framework import generics, status
 from .pagination import StandardResultPagination
 from rest_framework.response import Response
 from .activitylogmixin import ActivityLogMixin
+from .permissions import AdminOrTrustedUserOnly
 # Create your views here.
 
 
-class CompanyAddressListApiView(ActivityLogMixin, generics.ListAPIView):
+class CompanyAddressListApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.ListAPIView):
     pagination_class= StandardResultPagination
     queryset = CompanyAddress.active_objects.all()
     serializer_class = CompanyAddressSerializer
 
 
-class CompanyAddressCreateApiView(ActivityLogMixin,generics.CreateAPIView):
+class CompanyAddressCreateApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.CreateAPIView):
     queryset = CompanyAddress.objects.all()
     serializer_class = CompanyAddressSerializer
 
@@ -28,7 +29,7 @@ class CompanyAddressCreateApiView(ActivityLogMixin,generics.CreateAPIView):
         return Response(response, status=status.HTTP_201_CREATED)
     
 
-class CompanyAddressDetailUpdateDeleteApiView(ActivityLogMixin,generics.RetrieveUpdateDestroyAPIView):
+class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, ActivityLogMixin,generics.RetrieveUpdateDestroyAPIView):
     queryset = CompanyAddress.active_objects.all()
     serializer_class = CompanyAddressSerializer
     lookup_url_kwarg = 'company_address_slug'
@@ -62,12 +63,12 @@ class CompanyAddressDetailUpdateDeleteApiView(ActivityLogMixin,generics.Retrieve
         return Response(response, status=status.HTTP_204_NO_CONTENT)
     
 
-class ExpertCardListApiView(ActivityLogMixin,generics.ListAPIView):
+class ExpertCardListApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.ListAPIView):
     queryset=ExpertCard.active_objects.filter(is_deleted = False)
     pagination_class = StandardResultPagination
     serializer_class = ExpertCardSerializer
 
-class ExpertCardCreateApiView(ActivityLogMixin,generics.CreateAPIView):
+class ExpertCardCreateApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.CreateAPIView):
     queryset = ExpertCard.objects.all()
     serializer_class = ExpertCardSerializer
 
@@ -81,7 +82,7 @@ class ExpertCardCreateApiView(ActivityLogMixin,generics.CreateAPIView):
         return Response(response, status=status.HTTP_200_OK)
 
 
-class ExpertCardRetrieveUpdateDeleteApiView(ActivityLogMixin,generics.RetrieveUpdateDestroyAPIView):
+class ExpertCardRetrieveUpdateDeleteApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.RetrieveUpdateDestroyAPIView):
     queryset = ExpertCard.objects.all()
     serializer_class = ExpertCardSerializer
     lookup_field = 'email'
@@ -115,7 +116,7 @@ class ExpertCardRetrieveUpdateDeleteApiView(ActivityLogMixin,generics.RetrieveUp
         return Response(response, status=status.HTTP_204_NO_CONTENT)
     
 
-class ActivityLogAPIView(generics.ListAPIView):
+class ActivityLogAPIView(AdminOrTrustedUserOnly, generics.ListAPIView):
     pagination_class = StandardResultPagination
     queryset = ActivityLog.objects.all()
     serializer_class = ActivityLogSerializer
