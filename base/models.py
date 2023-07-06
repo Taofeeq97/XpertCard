@@ -7,7 +7,7 @@ class BaseModel(models.Model):
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now=True)
-    updated_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
     active_objects = ActiveManager()

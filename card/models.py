@@ -10,7 +10,8 @@ from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from admin_account.models import CustomAdminUser
-
+from django.utils.timesince import timesince
+from django.utils import timezone
 
 
 # Create your models here.
@@ -30,12 +31,18 @@ class ExpertCard(BaseModel):
     last_name= models.CharField(max_length=225)
     email = models.EmailField(unique=True)
     profile_picture = models.ImageField(upload_to='media', validators=[validate_image_size, validate_image_file_extension])
+    role = models.CharField(max_length=100, null=True, blank=True)
     qr_code = models.ImageField(upload_to='qr_code', null=True, blank=True)
+    tribe = models.CharField(max_length=100, null=True, blank=True)
     company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True, blank=True)
     city = models.CharField(max_length=225)
     country = models.CharField(max_length=30,choices=COUNTRY_CHOICES)
     phone_number = PhoneNumberField(null=True, blank=True)
+    
 
+    class Meta:
+        indexes = [ models.Index(fields=['email'])]
+        
     def __str__(self) -> str:
         return f"{self.email}'s Expert Card"
 
@@ -52,7 +59,6 @@ class CompanyAddress(BaseModel):
     def __str__(self) -> str:
         return f"{self.address_title}'s address"
     
-
 
 CREATE, READ, UPDATE, DELETE = 'Create','Read', 'Update', 'Delete'
 LOGIN, LOGOUT, LOGIN_FAILED = 'Login', 'Logout', 'Login Failed'
@@ -76,8 +82,7 @@ class ActivityLog(models.Model):
     action_type = models.CharField(choices=ACTION_TYPES, max_length=15)
     action_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=ACTION_STATUS, max_length=7, default=SUCCESS)
-    data = models.JSONField(default=dict, null=True)
-
+    data = models.JSONField(default=dict, blank=True,null=True)
 
     # for generic relations
     content_type = models.ForeignKey(
@@ -86,8 +91,18 @@ class ActivityLog(models.Model):
     object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey()
 
+    class Meta:
+        ordering = ['-id']
+    
+
     def __str__(self) -> str:
         return f"{self.action_type}, {self.content_type}, by {self.actor} on {self.action_time}"
+    
+    def time_since(self):
+        time_difference = timezone.now() - self.action_time
+        if time_difference.total_seconds() < 60:
+            return "now"
+        return f" {timesince(self.action_time, timezone.now())} ago"
 
 
 

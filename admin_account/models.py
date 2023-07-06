@@ -24,6 +24,10 @@ class CustomAdminUser(AbstractUser, PermissionsMixin):
 
     objects = UserManager()
 
+    class Meta:
+        indexes = [ models.Index(fields=['email'])]
+       
+
     def __str__(self):
         return self.email
 
