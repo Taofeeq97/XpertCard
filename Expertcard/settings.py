@@ -31,9 +31,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://web-production-9e1e.up.railway.app', 'http://127.0.0.1:8000', 'http://127.0.0.1:3000']
-CORS_ALLOWED_ORIGINS = ['https://web-production-9e1e.up.railway.app', 'http://127.0.0.1:8000', 'http://127.0.0.1:3000']
-
+CSRF_TRUSTED_ORIGINS = ['https://web-production-9e1e.up.railway.app', 'http://127.0.0.1']
+CORS_ALLOWED_ORIGINS = ['https://web-production-9e1e.up.railway.app', 'http://127.0.0.1']
 
 AUTH_USER_MODEL = 'admin_account.CustomAdminUser'
 DATABASE_URL = os.getenv('DATABASE_URL')

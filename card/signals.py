@@ -20,14 +20,12 @@ def get_client_ip(request):
         else request.META.get("REMOTE_ADDR")
     )
 
-
 @receiver(user_logged_in)
 def log_user_login(sender, request, user, **kwargs):
     message = f"{user.first_name} is logged in with ip:{get_client_ip(request)}"
-    ActivityLog.objects.create(actor=user, action_type=LOGIN)
-
+    ActivityLog.objects.create(actor=user, action_type=LOGIN, data=message)
 
 @receiver(user_login_failed)
 def log_user_login_failed(sender, credentials, request, **kwargs):
-    message = f"Login Attempt Failed for email {credentials.get('email')} with ip: {get_client_ip(request)}"
-    ActivityLog.objects.create(action_type=LOGIN_FAILED, remarks=message)
+    message = f"Login Attempt Failed for email {credentials.get('username')} with ip: {get_client_ip(request)}"
+    ActivityLog.objects.create(action_type=LOGIN_FAILED, data=message)
