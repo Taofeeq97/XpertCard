@@ -19,12 +19,12 @@ class CompanyAddressSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Inputed company title already exists')
         return value
     
-    # def validate(self, attrs):
-    #     latitude = attrs['latitude']
-    #     longitude = attrs['longitude']
-    #     if CompanyAddress.active_objects.filter(latitude=latitude, longitude=longitude).exists():
-    #         raise serializers.ValidationError('A company already exist in this same latitude and longitude')
-    #     return super().validate(attrs)
+    def validate(self, attrs):
+        latitude = attrs['latitude']
+        longitude = attrs['longitude']
+        if CompanyAddress.active_objects.filter(latitude=latitude, longitude=longitude).exists():
+            raise serializers.ValidationError('A company already exist in this same latitude and longitude')
+        return super().validate(attrs)
 
     def get_retrieve_update_delete_url(self, obj):
         request = self.context.get('request')
@@ -73,7 +73,7 @@ class ExpertCardSerializer(serializers.ModelSerializer):
     
     def get_retrieve_update_delete_url(self, obj):
         request = self.context.get('request')
-        url= reverse('expert_card_detail_create_update_delete', args=[str(obj.email)], request=request)
+        url= reverse('expert_card_detail_create_update_delete', args=[str(obj.id)], request=request)
         return url
 
 

@@ -11,12 +11,17 @@ from django.core.mail import send_mail
 import random
 import string
 from .tasks import send_email_fun
+import base64
 
 
 
 # Create your views here.
 
 class ObtainTokenPairApiView(TokenObtainPairView):
+    """
+    An endpoint to obtain Access token
+
+    """
     serializer_class = LoginSerializer
 
 
@@ -29,6 +34,10 @@ class UserLoggoutApiView(APIView):
 
 
 class CreateAdminUserApiView(generics.CreateAPIView):
+    """
+    An endpoint to Create an Admin User
+
+    """
     serializer_class = CreateCustomAdminUserSerializer
     queryset = CustomAdminUser.objects.all()
 
@@ -73,6 +82,11 @@ class CreateAdminUserApiView(generics.CreateAPIView):
 
 
 class ForgotPasswordApiView(APIView):
+
+    """
+    An endpoint to generate verification code
+
+    """
     serializer_class = EmailResetPasswordSerializer
 
     def post(self, request, *args, **kwargs):
@@ -85,17 +99,14 @@ class ForgotPasswordApiView(APIView):
                 # Generate a 6-character verification code
                 verification_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
                 print(verification_code)
-                
-                # Save the verification code in the user model
-                user.verification_code = verification_code
-                user.save()
+                user.verification_code =verification_code
                 
                 # Send the verification code to the user's email
                 mail_subject = "Password Reset Verification Code"
                 message = f"Hi {user.username},\n\n" \
                           f"Please use the following verification code to reset your password: {verification_code}"
                 send_email_fun(subject=mail_subject, message = message, sender='otutaofeeqi@gmail.com', receiver=user.email)
-                return Response({"status": "success", "message": "We have sent a password-reset link to the email you provided. Please check and reset  "},status=status.HTTP_200_OK)
+                return Response({"status": "success", "message": "We have sent a password-reset verification code to the email you provided. Please check and reset  "},status=status.HTTP_200_OK)
             else:
                 return Response({"status": "error", "message": "The email provided doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -103,6 +114,11 @@ class ForgotPasswordApiView(APIView):
 
 
 class VerifyVerificationCode(APIView):
+    """
+    An endpoint to verify the verification code
+
+    """
+
     def post(self, request, *args, **kwargs):
         verification_code = request.data.get('verification_code')
         try:
@@ -130,6 +146,11 @@ class VerifyVerificationCode(APIView):
 
 
 class SetPasswordApiView(generics.UpdateAPIView):
+
+    """
+    An endpoint to set new password
+
+    """
     serializer_class = ResetPasswordSerializer
 
     def update(self, request, *args, **kwargs):
@@ -145,3 +166,26 @@ class SetPasswordApiView(generics.UpdateAPIView):
         
 
 
+
+
+# import random
+# import string
+# import base64
+
+# ...
+
+# verification_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+# print(verification_code)
+
+# # Encode the user object to the verification code
+# user_data = {
+#     'user_id': user.id,
+#     'verification_code': verification_code
+# }
+# encoded_user_data = base64.urlsafe_b64encode(str(user_data).encode()).decode()
+
+# # Save the encoded verification code in the user model
+# user.verification_code = encoded_user_data
+# user.save()
+
+# ...

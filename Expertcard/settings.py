@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'admin_account.apps.AdminAccountConfig',
     'card.apps.CardConfig',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +72,20 @@ ROOT_URLCONF = 'Expertcard.urls'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
+}
+
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': os.getenv('ELASTICSEARCH_HOSTS'),
+        'http_auth': (os.getenv('ELASTICSEARCH_HTTP_AUTH_USERNAME'), os.getenv('ELASTICSEARCH_HTTP_AUTH_PASSWORD')),
+    },
+
+}
+
+
+ELASTICSEARCH_INDEX_NAMES = {
+    'Expertcard.ExpertCard': 'expertcard_index',
 }
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -138,7 +154,7 @@ SIMPLE_JWT = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db10.sqlite3',
+#         'NAME': BASE_DIR / 'db11.sqlite3',
 #     }
 # }
 

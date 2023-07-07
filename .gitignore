@@ -1,5 +1,6 @@
 .env/
 .env
 db10.sqlite3
+db11.sqlite3
 virtualenv
 /virtualenv
