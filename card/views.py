@@ -13,6 +13,9 @@ from django_elasticsearch_dsl_drf.filter_backends import (
 )
 from .document import ExpertCardDocument
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
+from elasticsearch_dsl import Q
+from django.db.models import Q
+
 # Create your views here.
 
 
@@ -107,15 +110,33 @@ class InctiveExpertCardListApiView(AdminOrTrustedUserOnly,  generics.ListAPIView
     serializer_class = ExpertCardSerializer
 
 
-class ExpertCardListApiView(AdminOrTrustedUserOnly,  generics.ListAPIView):
-    """
-    An endpoint to Access ExpertCard List
-    Authentication is required
+from django.db.models import Q
 
+class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     """
-    queryset=ExpertCard.active_objects.filter(is_deleted = False).order_by('-created_date')
+    An endpoint to access the ExpertCard List.
+    Authentication is required.
+    with search functionalities usinf first name, last_name or email
+    USE "search_query"x
+    """
+    queryset = ExpertCard.active_objects.filter(is_deleted=False).order_by('-created_date')
     pagination_class = StandardResultPagination
     serializer_class = ExpertCardSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.query_params.get('search_query')
+
+        if search_query:
+            # Apply search filter using Q objects
+            queryset = queryset.filter(
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(email__icontains=search_query)
+            )
+
+        return queryset
+
 
 
 # class ExpertCardListApiView(AdminOrTrustedUserOnly, DocumentViewSet):
@@ -151,7 +172,14 @@ class ExpertCardListApiView(AdminOrTrustedUserOnly,  generics.ListAPIView):
 #     search_fields = (
 #         'first_name',
 #         'last_name',
-#         'email',
+#         'profile_picture',
+#         'role',
+#         'tribe',
+#         'qr_code',
+#         'company_address',
+#         'city',
+#         'country',
+#         'phone_number'
 #     )
 
 #     def get_queryset(self):
@@ -168,6 +196,7 @@ class ExpertCardListApiView(AdminOrTrustedUserOnly,  generics.ListAPIView):
 #         # Execute the search and return the queryset
 #         response = search.execute()
 #         queryset = [hit.to_dict() for hit in response.hits]
+#         print('query_set',queryset)
 
 #         return queryset
     
