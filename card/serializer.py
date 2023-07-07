@@ -36,21 +36,22 @@ class ExpertCardSerializer(serializers.ModelSerializer):
     address = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField()
     retrieve_update_delete_url=serializers.SerializerMethodField()
+    created_date = serializers.SerializerMethodField() 
     
 
     class Meta:
         model = ExpertCard
-        fields = ('retrieve_update_delete_url','full_name', 'first_name', 'middle_name', 'last_name', 'email', 'profile_picture','qr_code', 'company_address', 'address', 'city', 'country', 'phone_number', 'created_date')
+        fields = ('retrieve_update_delete_url','full_name', 'first_name', 'middle_name', 'last_name', 'email', 'profile_picture','qr_code', 'role', 'tribe' ,'company_address', 'address', 'city', 'country', 'phone_number', 'created_date')
         read_only_fields = ('qr_code', 'address',)
         extra_kwargs = {
             'company_address': {'write_only': True},
             'created_date': {'read_only': True},
         }
 
-    # def get_created_date(self, obj):
-    #     date = obj.created_date
-    #     refined_date = str(date).date().isoformat()
-    #     return refined_date
+    def get_created_date(self, obj):
+        date = obj.created_date
+        refined_date = date.date().isoformat()
+        return refined_date
         
     def validate_email(self, value):
         if not value.endswith(('afexafricaexchange.com', 'afexafrica', 'afexnigeria.com')):
@@ -88,13 +89,17 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         city = validated_data.get('city', instance.city)
         country = validated_data.get('country', instance.country)
         phone_number = validated_data.get('phone_number', instance.phone_number)
+        role = validated_data.get('phone_number', instance.role)
+        tribe = validated_data.get('phone_number', instance.tribe)
         updated_data = {
             'first_name': first_name,
             'last_name': last_name,
             'email': email,
             'city': city,
             'country': country,
-            'phone_number': phone_number
+            'phone_number': phone_number,
+            'tribe':tribe,
+            'role':role
         }
         qr_code = generate_qr_code(updated_data)
         validated_data['qr_code'] = qr_code

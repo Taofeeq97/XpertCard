@@ -64,7 +64,7 @@ class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.R
     
 
 class ExpertCardListApiView(AdminOrTrustedUserOnly,  generics.ListAPIView):
-    queryset=ExpertCard.active_objects.filter(is_deleted = False)
+    queryset=ExpertCard.active_objects.filter(is_deleted = False).order_by('-created_date')
     pagination_class = StandardResultPagination
     serializer_class = ExpertCardSerializer
 
@@ -87,7 +87,7 @@ class ExpertCardCreateApiView(AdminOrTrustedUserOnly, ActivityLogCreateMixin, ge
 
 
 class ExpertCardRetrieveUpdateDeleteApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.RetrieveUpdateDestroyAPIView):
-    queryset = ExpertCard.objects.all()
+    queryset = ExpertCard.objects.filter(is_deleted = False)
     serializer_class = ExpertCardSerializer
     lookup_field = 'email'
     lookup_url_kwarg = 'expert_email'

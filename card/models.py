@@ -4,9 +4,6 @@ from base.models import BaseModel
 from phonenumber_field.modelfields import PhoneNumberField
 from .validators import validate_image_size
 from django.core.validators import validate_image_file_extension
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
-from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from admin_account.models import CustomAdminUser
@@ -31,13 +28,13 @@ class ExpertCard(BaseModel):
     last_name= models.CharField(max_length=225)
     email = models.EmailField(unique=True)
     profile_picture = models.ImageField(upload_to='media', validators=[validate_image_size, validate_image_file_extension])
-    role = models.CharField(max_length=100, null=True, blank=True)
+    role = models.CharField(max_length=100,)
     qr_code = models.ImageField(upload_to='qr_code', null=True, blank=True)
-    tribe = models.CharField(max_length=100, null=True, blank=True)
+    tribe = models.CharField(max_length=100,)
     company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True, blank=False)
     city = models.CharField(max_length=225)
     country = models.CharField(max_length=30,choices=COUNTRY_CHOICES)
-    phone_number = PhoneNumberField(null=True, blank=True)
+    phone_number = PhoneNumberField()
     
 
     class Meta:
@@ -94,7 +91,6 @@ class ActivityLog(models.Model):
     class Meta:
         ordering = ['-id']
     
-
     def __str__(self) -> str:
         return f"{self.action_type}, {self.content_type}, by {self.actor} on {self.action_time}"
     

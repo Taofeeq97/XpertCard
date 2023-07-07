@@ -1,10 +1,9 @@
 import logging
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.urls import resolve
 from rest_framework.exceptions import ValidationError
 from .models import ActivityLog, READ, CREATE, UPDATE, DELETE, SUCCESS, FAILED
-from django.shortcuts import get_object_or_404
+
 
 
 class ActivityLogMixin:
@@ -49,7 +48,7 @@ class ActivityLogMixin:
            
             object = self.get_object()
             print(object)
-            message = f"{self._get_action_type(request)} {object}"
+            message = f"{self._get_action_type(request)} {object.first_name} {object.last_name}'s Expert card"
             print(message)
             ActivityLog.objects.create(**data, data=message)
 
@@ -67,7 +66,6 @@ class ActivityLogCreateMixin:
     
     def _create_activity_log(self, instance, request):
         actor = self._get_user(request)
-        actor_name = f"{actor.first_name} {actor.last_name}if actor else 'Unknown'"
         message = f"created an expert's card for {instance.first_name} {instance.last_name}"
         ActivityLog.objects.create(
             actor=actor,
