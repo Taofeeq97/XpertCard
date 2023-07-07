@@ -113,7 +113,9 @@ class ActivityLogSerializer(serializers.ModelSerializer):
             user_id = actor.id
             user = CustomAdminUser.objects.get(id=user_id)
             serializer = CreateCustomAdminUserSerializer(user, context=self.context)
-            return serializer.data['email']
+            first_name = serializer.data['first_name']
+            last_name = serializer.data['last_name']
+            return first_name + ' ' + last_name
         return None
 
     def get_content_type(self, obj):

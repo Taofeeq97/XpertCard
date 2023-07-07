@@ -45,7 +45,7 @@ class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.R
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=False)
+        serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         response = {
             "message": "Address updated successfully",
