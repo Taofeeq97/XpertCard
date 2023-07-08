@@ -30,13 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://web-production-5804.up.railway.app', 
-                        'http://127.0.0.1', 'http://127.0.0.1:5173', 
-                        'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000']
-CORS_ALLOWED_ORIGINS = ['https://web-production-5804.up.railway.app',
-                         'http://127.0.0.1', 'http://127.0.0.1:5173',
-                        'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000']
+
 
 AUTH_USER_MODEL = 'admin_account.CustomAdminUser'
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -58,11 +52,13 @@ INSTALLED_APPS = [
     'card.apps.CardConfig',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -70,6 +66,19 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://web-production-5804.up.railway.app', 
+                        'http://127.0.0.1', 'http://127.0.0.1:5173', 
+                        'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000']
+# CORS_ALLOWED_ORIGINS = ['https://web-production-5804.up.railway.app',
+#                          'http://127.0.0.1', 'http://127.0.0.1:5173',
+#                         'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000']
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+
 
 ROOT_URLCONF = 'Expertcard.urls'
 
