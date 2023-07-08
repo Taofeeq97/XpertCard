@@ -11,7 +11,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 # Local imports
 from base import constants
 from base.models import BaseModel
-from .validators import ValidateImageFileExtension, ValidateimageSize
+from .validators import ValidateimageSize
 from admin_account.models import CustomAdminUser
 
 # Create your models here.
@@ -30,7 +30,7 @@ class ExpertCard(BaseModel):
     middle_name = models.CharField(max_length=225, null=True, blank=True)
     last_name= models.CharField(max_length=225)
     email = models.EmailField(unique=True)
-    profile_picture = models.ImageField(upload_to='media', validators=[ValidateImageFileExtension, ValidateimageSize], null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='media', validators=[ ValidateimageSize], null=True, blank=True)
     role = models.CharField(max_length=100,)
     qr_code = models.ImageField(upload_to='qr_code', null=True, blank=True)
     tribe = models.CharField(max_length=100,)
