@@ -56,7 +56,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    ;'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,11 +72,12 @@ ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://web-production-5804.up.railway.app', 
                         'http://127.0.0.1', 'http://127.0.0.1:5173', 
                         'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000']
-# CORS_ALLOWED_ORIGINS = ['https://web-production-5804.up.railway.app',
-#                          'http://127.0.0.1', 'http://127.0.0.1:5173',
-#                         'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000']
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = ('https://web-production-5804.up.railway.app',
+                         'http://127.0.0.1', 'http://127.0.0.1:5173',
+                        'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000')
+
+# CORS_ORIGIN_ALLOW_ALL = True
 
 
 
