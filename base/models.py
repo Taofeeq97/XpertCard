@@ -1,5 +1,4 @@
 from django.db import models
-
 from .manager import ActiveManager, DeletedManager
 
 

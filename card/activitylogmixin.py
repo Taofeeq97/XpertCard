@@ -1,10 +1,15 @@
+# Python standard library imports
 import logging
+
+# Django imports
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+
+# Third-party imports
 from rest_framework.exceptions import ValidationError
+
+# Local imports
 from .models import ActivityLog, READ, CREATE, UPDATE, DELETE, SUCCESS, FAILED
-
-
 
 class ActivityLogMixin:
     log_message = None

@@ -7,6 +7,7 @@ urlpatterns = [
     path('company_address/create/', views.CompanyAddressCreateApiView.as_view(), name='company_address_create'),
     path('company_address/<slug:company_address_slug>/', views.CompanyAddressDetailUpdateDeleteApiView.as_view(), name='company_address_detail_create_update_delete'),
     path('expert_cards/', views.ExpertCardListApiView.as_view(), name='expert_card_list'),
+    path('expert_cards/list/', views.ExpertCardTestListApiView.as_view({'get': 'list'}), name='expert_card_list'),
     path('expert_cards/active/', views.ActiveExpertCardListApiView.as_view(), name='expert_card_list'),
     path('expert_cards/inactive/', views.InctiveExpertCardListApiView.as_view(), name='expert_card_list'),
     path('expert_cards/create/', views.ExpertCardCreateApiView.as_view(), name='expert_card_create'),

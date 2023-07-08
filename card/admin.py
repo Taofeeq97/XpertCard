@@ -1,4 +1,7 @@
+# Django imports
 from django.contrib import admin
+
+# Local imports
 from .models import ExpertCard, CompanyAddress, ActivityLog
 
 # Register your models here.

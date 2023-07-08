@@ -1,11 +1,13 @@
-from django.utils.text import slugify
-from .models import CompanyAddress, ExpertCard
+# Django imports
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in, user_login_failed
-from .activitylogmixin import ActivityLogCreateMixin
+from django.utils.text import slugify
 
-from .models import ActivityLog,  LOGIN, LOGIN_FAILED
+# Local imports
+from .models import CompanyAddress, ActivityLog
+from .models import LOGIN, LOGIN_FAILED
+
 
 @receiver(post_save, sender=CompanyAddress)
 def generate_address_slug(sender, instance, **kwargs):

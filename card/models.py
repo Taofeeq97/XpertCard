@@ -1,15 +1,18 @@
+# Django imports
 from django.db import models
-from base import constants
-from base.models import BaseModel
-from phonenumber_field.modelfields import PhoneNumberField
-from .validators import validate_image_size
-from django.core.validators import validate_image_file_extension
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from admin_account.models import CustomAdminUser
 from django.utils.timesince import timesince
 from django.utils import timezone
 
+# Third-party imports
+from phonenumber_field.modelfields import PhoneNumberField
+
+# Local imports
+from base import constants
+from base.models import BaseModel
+from .validators import ValidateImageFileExtension, ValidateimageSize
+from admin_account.models import CustomAdminUser
 
 # Create your models here.
 
@@ -27,11 +30,11 @@ class ExpertCard(BaseModel):
     middle_name = models.CharField(max_length=225, null=True, blank=True)
     last_name= models.CharField(max_length=225)
     email = models.EmailField(unique=True)
-    profile_picture = models.ImageField(upload_to='media', validators=[validate_image_size, validate_image_file_extension])
+    profile_picture = models.ImageField(upload_to='media', validators=[ValidateImageFileExtension, ValidateimageSize], null=True, blank=True)
     role = models.CharField(max_length=100,)
     qr_code = models.ImageField(upload_to='qr_code', null=True, blank=True)
     tribe = models.CharField(max_length=100,)
-    company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True, blank=False)
+    company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True)
     city = models.CharField(max_length=225)
     country = models.CharField(max_length=30,choices=COUNTRY_CHOICES)
     phone_number = PhoneNumberField()

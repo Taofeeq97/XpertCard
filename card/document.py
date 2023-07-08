@@ -1,12 +1,16 @@
+# Django imports
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
-from .models import ExpertCard
+
+# Local imports
+from .models import ExpertCard, CompanyAddress
+
 
 
 @registry.register_document
 class ExpertCardDocument(Document):
     class Index:
-        name = 'expertcard'
+        name = 'xpertcards_index'
 
     first_name = fields.TextField(attr='first_name')
     last_name = fields.TextField(attr='last_name')
@@ -26,7 +30,7 @@ class ExpertCardDocument(Document):
     })
     city = fields.TextField(attr='city')
     country = fields.TextField(attr='country')
-    phone_number = fields.TextField(attr='phone_number')
+    phone_number = fields.TextField(attr='phone_number.as_national')
 
     class Django:
         model = ExpertCard
@@ -34,3 +38,8 @@ class ExpertCardDocument(Document):
     def get_queryset(self):
         return super().get_queryset().select_related('company_address')
 
+    def get_instances_from_related(self, related_instance):
+        # Override this method to return the related instance(s) for serialization
+        if isinstance(related_instance, CompanyAddress):
+            return related_instance
+        return super().get_instances_from_related(related_instance)

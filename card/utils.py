@@ -1,7 +1,11 @@
-import qrcode
+# Standard library imports
 from io import BytesIO
+
+# Third-party imports
+import qrcode
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
+
 
 def generate_qr_code(data):
     vcard = f"BEGIN:VCARD\nVERSION:3.0\n" \

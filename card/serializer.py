@@ -1,10 +1,12 @@
+# Third-party imports
 from rest_framework import serializers
+from rest_framework.reverse import reverse
+
+# Local imports
 from .models import ExpertCard, CompanyAddress, ActivityLog
 from .utils import generate_qr_code
-from rest_framework.reverse import reverse
 from admin_account.models import CustomAdminUser
 from admin_account.serializers import CreateCustomAdminUserSerializer
-from datetime import datetime
 
 
 class CompanyAddressSerializer(serializers.ModelSerializer):
@@ -35,35 +37,38 @@ class CompanyAddressSerializer(serializers.ModelSerializer):
 class ExpertCardSerializer(serializers.ModelSerializer):
     address = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField()
-    retrieve_update_delete_url=serializers.SerializerMethodField()
-    created_date = serializers.SerializerMethodField() 
-    
+    retrieve_update_delete_url = serializers.SerializerMethodField()
+    created_date = serializers.SerializerMethodField()
 
     class Meta:
         model = ExpertCard
-        fields = ('retrieve_update_delete_url','full_name', 'first_name', 'middle_name', 'last_name', 'email', 'profile_picture','qr_code', 'role', 'tribe' ,'company_address', 'address', 'city', 'country', 'phone_number', 'created_date')
+        fields = ('retrieve_update_delete_url', 'full_name', 'first_name', 'middle_name', 'last_name', 'email',
+                  'profile_picture', 'qr_code', 'role', 'tribe', 'company_address', 'address', 'city', 'country',
+                  'phone_number', 'created_date')
         read_only_fields = ('qr_code', 'address',)
         extra_kwargs = {
             'company_address': {'write_only': True},
+            'middle_name': {'write_only': True},
             'created_date': {'read_only': True},
+            'qr_code': {'read_only': True},       
         }
 
     def get_created_date(self, obj):
         date = obj.created_date
         refined_date = date.date().isoformat()
         return refined_date
-        
+
     def validate_email(self, value):
         if not value.endswith(('afexafricaexchange.com', 'afexafrica', 'afexnigeria.com')):
             raise serializers.ValidationError('Invalid email format')
         return value
-    
+
     def get_address(self, obj):
         address_id = obj.company_address.id
         comp_address = CompanyAddress.objects.get(id=address_id)
         serializer = CompanyAddressSerializer(comp_address, context=self.context)
         return serializer.data['retrieve_update_delete_url']
-    
+
     def get_full_name(self, obj):
         first_name = obj.first_name.capitalize()
         middle_name = obj.middle_name.capitalize() if obj.middle_name else ""
@@ -75,7 +80,6 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         url= reverse('expert_card_detail_create_update_delete', args=[str(obj.id)], request=request)
         return url
-
 
     def create(self, validated_data):
         qr_code = generate_qr_code(validated_data)
@@ -105,9 +109,11 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         validated_data['qr_code'] = qr_code
         return super().update(instance, validated_data)
 
+
 class ActivityLogSerializer(serializers.ModelSerializer):
     actor = serializers.SerializerMethodField()
     content_type = serializers.SerializerMethodField()
+
     class Meta:
         model = ActivityLog
         fields = ('actor','action_type','time_since', 'status', 'content_type','data')
@@ -128,5 +134,6 @@ class ActivityLogSerializer(serializers.ModelSerializer):
         if content_type is not None:
             return content_type.model
         return None
+
 
 

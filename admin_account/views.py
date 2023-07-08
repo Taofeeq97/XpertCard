@@ -1,16 +1,28 @@
+# Django imports
 from django.shortcuts import render
+from django.urls import reverse
+from django.core.mail import send_mail
+
+# Third-party imports
 from rest_framework.views import APIView
-from .serializers import LoginSerializer, CreateCustomAdminUserSerializer, EmailResetPasswordSerializer, ResetPasswordSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics, status
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+# Local imports
+from .serializers import (
+    LoginSerializer,
+    CreateCustomAdminUserSerializer,
+    EmailResetPasswordSerializer,
+    ResetPasswordSerializer,
+)
 from .models import CustomAdminUser
-from django.urls import reverse
-from django.core.mail import send_mail
+from .tasks import send_email_fun
+
+# Python standard library imports
 import random
 import string
-from .tasks import send_email_fun
 import base64
 
 
@@ -105,12 +117,84 @@ class ForgotPasswordApiView(APIView):
                 mail_subject = "Password Reset Verification Code"
                 message = f"Hi {user.username},\n\n" \
                           f"Please use the following verification code to reset your password: {verification_code}"
-                send_email_fun(subject=mail_subject, message = message, sender='otutaofeeqi@gmail.com', receiver=user.email)
+                send_email_fun(subject=mail_subject, message = message, sender='otutaiwo1@gmail.com', receiver=user.email)
                 return Response({"status": "success", "message": "We have sent a password-reset verification code to the email you provided. Please check and reset  "},status=status.HTTP_200_OK)
             else:
                 return Response({"status": "error", "message": "The email provided doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+# class ForgotPasswordApiView(APIView):
+
+#     """
+#     An endpoint to generate verification code
+
+#     """
+#     serializer_class = EmailResetPasswordSerializer
+
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.serializer_class(data=request.data)
+#         if serializer.is_valid():
+#             email = serializer.validated_data['email']
+#             if CustomAdminUser.objects.filter(email__exact=email).exists():
+#                 user = CustomAdminUser.objects.get(email=email)
+                
+#                 # Generate a 6-character verification code
+#                 verification_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+#                 print(verification_code)
+
+#                 # Encode the user object to the verification code
+#                 user_data = {
+#                     'user_id': user.id,
+#                     'verification_code': verification_code
+#                 }
+#                 encoded_user_data = base64.urlsafe_b64encode(str(user_data).encode()).decode()
+
+#                 # Save the encoded verification code in the user model
+#                 user.verification_code = verification_code
+#                 user.encoded_user_data = encoded_user_data
+#                 user.save()
+
+                
+#                 # Send the verification code to the user's email
+#                 mail_subject = "Password Reset Verification Code"
+#                 message = f"Hi {user.username},\n\n" \
+#                           f"Please use the following verification code to reset your password: {verification_code}"
+#                 send_email_fun(subject=mail_subject, message = message, sender='otutaofeeqi@gmail.com', receiver=user.email)
+#                 return Response({"status": "success", "message": "We have sent a password-reset verification code to the email you provided. Please check and reset  "},status=status.HTTP_200_OK)
+#             else:
+#                 return Response({"status": "error", "message": "The email provided doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# class VerifyVerificationCode(APIView):
+#     """
+#     An endpoint to verify the verification code
+
+#     """
+
+#     def post(self, request, *args, **kwargs):
+#         verification_code = request.data.get('verification_code')
+#         try:
+#             user = CustomAdminUser.objects.get(verification_code=verification_code)
+#         except CustomAdminUser.DoesNotExist:
+#             return Response({"status": "fail", "message": "Invalid verification code"}, status=status.HTTP_400_BAD_REQUEST)
+#         # Reset the verification code after successful verification
+#         encoded_data = user.encoded_user_data
+#         decoded_user_data = base64.urlsafe_b64decode(encoded_data).decode()
+#         user_id = eval(decoded_user_data)
+#         user.verification_code = ''
+#         user.encoded_user_data = ''
+#         user.save()
+#         return Response({"status": "success", "message": "Verification code is valid"}, status=status.HTTP_200_OK)
 
 
 class VerifyVerificationCode(APIView):
@@ -131,18 +215,18 @@ class VerifyVerificationCode(APIView):
         return Response({"status": "success", "message": "Verification code is valid"}, status=status.HTTP_200_OK)
 
 
-# class SetPasswordApiView(generics.UpdateAPIView):
-#     serializer_class = ResetPasswordSerializer
+class SetPasswordApiView(generics.UpdateAPIView):
+    serializer_class = ResetPasswordSerializer
 
-#     def update(self, request, *args, **kwargs):
-#         email = self.get_serializer['email']
-#         password = self.get_serializer['password']
-#         user = CustomAdminUser.objects.get(email = email)
-#         self.perform_update(user.set_password(password))
-#         response = {
-#             "message":"new password set successfully"
-#         }
-#         return Response(response, status=status.HTTP_200_OK)
+    def update(self, request, *args, **kwargs):
+        email = self.get_serializer['email']
+        password = self.get_serializer['password']
+        user = CustomAdminUser.objects.get(email = email)
+        self.perform_update(user.set_password(password))
+        response = {
+            "message":"new password set successfully"
+        }
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class SetPasswordApiView(generics.UpdateAPIView):
@@ -164,28 +248,3 @@ class SetPasswordApiView(generics.UpdateAPIView):
         return Response({"status": "success", "message": "Password set successfully"}, status=status.HTTP_200_OK)
 
         
-
-
-
-
-# import random
-# import string
-# import base64
-
-# ...
-
-# verification_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-# print(verification_code)
-
-# # Encode the user object to the verification code
-# user_data = {
-#     'user_id': user.id,
-#     'verification_code': verification_code
-# }
-# encoded_user_data = base64.urlsafe_b64encode(str(user_data).encode()).decode()
-
-# # Save the encoded verification code in the user model
-# user.verification_code = encoded_user_data
-# user.save()
-
-# ...
