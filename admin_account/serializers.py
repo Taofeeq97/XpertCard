@@ -52,6 +52,8 @@ class LoginSerializer(serializers.Serializer):
         
         token = self.get_token(user)
         response = {
+            'first_name':user.first_name,
+            'last_name':user.last_name,
             'email': email,
             'token': token,
         }
