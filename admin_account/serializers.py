@@ -6,11 +6,11 @@ from .models import CustomAdminUser
 
 class CreateCustomAdminUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    confirm_password = serializers.CharField(write_only =True, required= True )
+    
 
     class Meta:
         model = CustomAdminUser
-        fields = ['first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'password', 'confirm_password']
+        fields = ['first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'password']
 
     def validate_email(self, value):
         if not value.endswith(('afexafricaexchange.com', 'afexafrica', 'afexnigeria.com')):
@@ -54,9 +54,6 @@ class LoginSerializer(serializers.Serializer):
         token = self.get_token(user)
         
         response = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'profile_picture': request.build_absolute_uri(user.profile_picture.url),
             'email': email,
             'token': token,
         }

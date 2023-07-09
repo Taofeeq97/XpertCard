@@ -71,10 +71,10 @@ MIDDLEWARE = [
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://web-production-5804.up.railway.app', 
                         'http://127.0.0.1', 'http://127.0.0.1:5173', 
-                        'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000']
+                        'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000', 'http://127.0.0.1:8000']
 CORS_ORIGIN_WHITELIST = ('https://web-production-5804.up.railway.app',
                          'http://127.0.0.1', 'http://127.0.0.1:5173',
-                        'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000')
+                        'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000', 'http://127.0.0.1:8000')
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
@@ -164,16 +164,16 @@ SIMPLE_JWT = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db11.sqlite3',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db11.sqlite3',
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
+# }
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 # DATABASES = {
 #     'default': {

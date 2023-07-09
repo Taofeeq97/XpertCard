@@ -45,11 +45,12 @@ class CompanyAddressListApiView(generics.ListAPIView):
 
 class CompanyAddressCreateApiView(generics.CreateAPIView):
     """
-    An endpoint to create A company Address
-    Authentication is required
+    -An endpoint to create A company Address
+    -Authentication is required
 
     """
     queryset = CompanyAddress.objects.all()
+    pagination_class = StandardResultPagination
     permission_classes = [AdminOrTrustedUserOnly]
     serializer_class = CompanyAddressSerializer
 
@@ -109,7 +110,7 @@ class ActiveExpertCardListApiView(generics.ListAPIView):
     Authentication is required
 
     """
-    queryset=ExpertCard.active_objects.filter(is_active=True, is_deleted = False).order_by('-created_date')
+    queryset=ExpertCard.active_objects.filter(is_deleted = False).order_by('-created_date')
     pagination_class = StandardResultPagination
     permission_classes = [AdminOrTrustedUserOnly]
     serializer_class = ExpertCardSerializer
@@ -121,7 +122,7 @@ class InctiveExpertCardListApiView(generics.ListAPIView):
     Authentication is required
 
     """
-    queryset=ExpertCard.active_objects.filter(is_active=False, is_deleted = False).order_by('-created_date')
+    queryset=ExpertCard.objects.filter(is_active=False, is_deleted = False).order_by('-created_date')
     pagination_class = StandardResultPagination
     permission_classes = [AdminOrTrustedUserOnly]
     serializer_class = ExpertCardSerializer
@@ -132,7 +133,7 @@ class ExpertCardListApiView(generics.ListAPIView):
     An endpoint to access the ExpertCard List.
     Authentication is required.
     with search functionalities usinf first name, last_name or email
-    USE "search_query"x
+    USE "search_query"
     """
     queryset = ExpertCard.active_objects.filter(is_deleted=False).order_by('-created_date')
     pagination_class = StandardResultPagination
@@ -235,8 +236,6 @@ class BulkActivateExpertCardApiView(generics.UpdateAPIView):
         }
         return Response(response, status=status.HTTP_200_OK)
     
-
-
 
 class ActivityLogAPIView(generics.ListAPIView):
     """
