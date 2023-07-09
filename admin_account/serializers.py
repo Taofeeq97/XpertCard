@@ -50,15 +50,18 @@ class LoginSerializer(serializers.Serializer):
         if not user or not user.check_password(password):
             raise serializers.ValidationError('Invalid login credentials or not a verified user')
         
+        request = self.context.get('request')
         token = self.get_token(user)
+        
         response = {
-            'first_name':user.first_name,
-            'last_name':user.last_name,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'profile_picture': request.build_absolute_uri(user.profile_picture.url),
             'email': email,
             'token': token,
         }
         return response
-    
+
 
 class EmailResetPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField(write_only=True)
