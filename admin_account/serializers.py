@@ -6,7 +6,6 @@ from .models import CustomAdminUser
 
 class CreateCustomAdminUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    
 
     class Meta:
         model = CustomAdminUser
@@ -46,10 +45,8 @@ class LoginSerializer(serializers.Serializer):
         email = data.get('email')
         password = data.get('password')
         user = CustomAdminUser.objects.filter(email=email, is_trusted=True).first()
-        
         if not user or not user.check_password(password):
             raise serializers.ValidationError('Invalid login credentials or not a verified user')
-        
         request = self.context.get('request')
         token = self.get_token(user)
         

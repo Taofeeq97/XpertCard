@@ -20,10 +20,15 @@ class CompanyAddressSerializer(serializers.ModelSerializer):
         if CompanyAddress.objects.filter(address_title=value).exists():
             raise serializers.ValidationError('Inputed company title already exists')
         return value
-    
+   
+
     def validate(self, attrs):
         latitude = attrs['latitude']
         longitude = attrs['longitude']
+        if longitude and not longitude.endswith(('N', 'W', 'S', 'E')):
+            raise serializers.ValidationError('Invalid longitude format')
+        if latitude and not latitude.endswith(('N', 'W', 'S', 'E')):
+            raise serializers.ValidationError('Invalid latitude format')
         if CompanyAddress.active_objects.filter(latitude=latitude, longitude=longitude).exists():
             raise serializers.ValidationError('A company already exist in this same latitude and longitude')
         return super().validate(attrs)
@@ -62,15 +67,6 @@ class ExpertCardSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Invalid email format')
         return value
     
-    def validate(self, attrs):
-        longitude = attrs['longitude']
-        latitude = attrs['latitude']
-        if longitude and not longitude.endswith(('N', 'W', 'S', 'E')):
-            raise serializers.ValidationError('Invalid longitude format')
-        if latitude and not latitude.endswith(('N', 'W', 'S', 'E')):
-            raise serializers.ValidationError('Invalid latitude format')
-        return super().validate(attrs)
-
     def get_address(self, obj):
         address_id = obj.company_address.id
         comp_address = CompanyAddress.objects.get(id=address_id)
