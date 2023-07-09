@@ -63,8 +63,8 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         return value
     
     def validate(self, attrs):
-        longitude = attrs.get('longitude')
-        latitude = attrs.get('latitude')
+        longitude = attrs['longitude']
+        latitude = attrs['latitude']
         if longitude and not longitude.endswith(('N', 'W', 'S', 'E')):
             raise serializers.ValidationError('Invalid longitude format')
         if latitude and not latitude.endswith(('N', 'W', 'S', 'E')):
