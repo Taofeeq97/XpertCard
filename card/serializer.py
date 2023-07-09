@@ -48,7 +48,6 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         read_only_fields = ('qr_code', 'address',)
         extra_kwargs = {
             'company_address': {'write_only': True},
-            'middle_name': {'write_only': True},
             'created_date': {'read_only': True},
             'qr_code': {'read_only': True},       
         }
