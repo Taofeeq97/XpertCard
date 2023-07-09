@@ -13,7 +13,7 @@ class CreateCustomAdminUserSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'password']
 
     def validate_email(self, value):
-        if not value.endswith(('afexafricaexchange.com', 'afexafrica', 'afexnigeria.com')):
+        if not value.endswith(('afexafricaexchange.com', 'afexafrica.com', 'afexnigeria.com')):
             raise serializers.ValidationError('Invalid email format')
         return value
 
