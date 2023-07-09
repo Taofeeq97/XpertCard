@@ -61,6 +61,15 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         if not value.endswith(('afexafricaexchange.com', 'afexafrica', 'afexnigeria.com')):
             raise serializers.ValidationError('Invalid email format')
         return value
+    
+    def validate(self, attrs):
+        longitude = attrs.get('longitude')
+        latitude = attrs.get('latitude')
+        if longitude and not longitude.endswith(('N', 'W', 'S', 'E')):
+            raise serializers.ValidationError('Invalid longitude format')
+        if latitude and not latitude.endswith(('N', 'W', 'S', 'E')):
+            raise serializers.ValidationError('Invalid latitude format')
+        return super().validate(attrs)
 
     def get_address(self, obj):
         address_id = obj.company_address.id
