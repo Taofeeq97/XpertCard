@@ -152,6 +152,7 @@ class ExpertCardElasticSearchSerializer(serializers.Serializer):
     city = serializers.CharField()
     country = serializers.CharField()
     phone_number = serializers.CharField()
+    # is_active = serializers.BooleanField()
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

@@ -1,6 +1,10 @@
 from django.urls import path
 from . import views
+from rest_framework import routers
 
+router = routers.SimpleRouter(trailing_slash=False)
+
+router.register(r'expertcard-search', views.ExpertCardTestListApiView, basename='expertcard-search')
 
 urlpatterns = [
     path('company_address/', views.CompanyAddressListApiView.as_view(), name='company_address_list'),
@@ -16,3 +20,6 @@ urlpatterns = [
     path('activity_log/', views.ActivityLogAPIView.as_view(), name='activity_log')
     
 ]
+
+
+urlpatterns += router.urls

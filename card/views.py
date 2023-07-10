@@ -280,11 +280,12 @@ from django.http import JsonResponse
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 
 
+
 class ExpertCardTestListApiView(DocumentViewSet):
     document = ExpertCardDocument
     
     """
-    An endpoint to access the ExpertCard List with elasticsearch Func.
+    An endpoint to access the ExpertCard List with Elasticsearch Func.
     Authentication is required.
     """
 
@@ -331,7 +332,15 @@ class ExpertCardTestListApiView(DocumentViewSet):
 
         # Apply filters based on query parameters
         if query:
-            search = search.query(Q('multi_match', query=query, fields=['first_name', 'last_name', 'email']))
+            search = search.query(
+                Q('multi_match', query=query, fields=['first_name', 'last_name', 'email'])
+            ).suggest(
+                'first_name_suggest', query, completion={'field': 'first_name.suggest'}
+            ).suggest(
+                'last_name_suggest', query, completion={'field': 'last_name.suggest'}
+            ).suggest(
+                'email_suggest', query, completion={'field': 'email.suggest'}
+            )
 
         # Execute the search and return the results
         response = search.execute()

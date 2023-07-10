@@ -11,11 +11,26 @@ class ExpertCardDocument(Document):
     class Index:
         name = 'xpertcards_index'
 
-    first_name = fields.TextField(attr='first_name')
-    last_name = fields.TextField(attr='last_name')
-    email = fields.TextField(attr='email')
+    first_name = fields.TextField(
+        attr='first_name',
+        fields={
+            'suggest': fields.CompletionField(),
+        }
+    )
+    last_name = fields.TextField(
+        attr='last_name',
+        fields={
+            'suggest': fields.CompletionField(),
+        }
+    )
+    email = fields.TextField(
+        attr='email',
+        fields={
+            'suggest': fields.CompletionField(),
+        }
+    )
     profile_picture = fields.FileField(attr='profile_picture')
-    role = fields.TextField(attr='role', default='')
+    role = fields.TextField(attr='role')
     qr_code = fields.FileField(attr='qr_code')
     tribe = fields.TextField(attr='tribe')
     company_address = fields.ObjectField(properties={
@@ -30,6 +45,8 @@ class ExpertCardDocument(Document):
     city = fields.TextField(attr='city')
     country = fields.TextField(attr='country')
     phone_number = fields.TextField(attr='phone_number.as_national')
+    # is_acctive = fields.BooleanField(attr='is_active')
+
 
     class Django:
         model = ExpertCard
