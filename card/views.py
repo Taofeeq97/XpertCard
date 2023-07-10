@@ -13,7 +13,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 # Local application or project-specific imports
-from .activitylogmixin import ActivityLogMixin, ActivityLogCreateMixin
+from .activitylogmixin import ActivityLogMixin
 from .document import ExpertCardDocument
 from .models import (
     CompanyAddress,
@@ -154,7 +154,7 @@ class ExpertCardListApiView(generics.ListAPIView):
         return queryset
 
 
-class ExpertCardCreateApiView(AdminOrTrustedUserOnly, ActivityLogCreateMixin, generics.CreateAPIView):
+class ExpertCardCreateApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.CreateAPIView):
     """
     An endpoint to create Expertcard
     Authentication is required
@@ -170,7 +170,6 @@ class ExpertCardCreateApiView(AdminOrTrustedUserOnly, ActivityLogCreateMixin, ge
         self.perform_create(serializer)
         # Call the _create_activity_log method to create the activity log
         self._create_activity_log(serializer.instance, request)
-        
         response = {
             "message": "Expert card created successfully"
         }
@@ -201,6 +200,8 @@ class ExpertCardRetrieveUpdateDeleteApiView(ActivityLogMixin, generics.RetrieveU
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception = True)
         self.perform_update(serializer=serializer)
+        # Call the _create_activity_log method to create the activity log
+        self._update_activity_log(serializer.instance, request)
         response = {
             "message":'Expertcard Updated Successfully'
         }
@@ -211,6 +212,8 @@ class ExpertCardRetrieveUpdateDeleteApiView(ActivityLogMixin, generics.RetrieveU
         instance.is_deleted = True
         instance.is_active = False
         instance.save(update_fields = ['is_deleted', 'is_active'])
+        # Call the _create_activity_log method to create the activity log
+        self._delete_activity_log(instance, request)
         response = {
             "message": "Expertcard deleted successfully"
         }

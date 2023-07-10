@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl_drf',
     'corsheaders',
     'storages',
+    'rest_framework_simplejwt.token_blacklist',
 ]
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -259,7 +261,7 @@ CELERY_TIMEZONE = 'Lagos/Africa'
 
 #aws s3 bucket configuration
 AWS_QUERYSTRING_AUTH= False
-AWS_S3_FILE_OVERWRITE=False
+AWS_S3_FILE_OVERWRITE= True
 AWS_S3_ACCESS_KEY_ID = os.getenv('AWS_S3_ACCESS_KEY_ID')
 AWS_S3_SECRET_ACCESS_KEY= os.getenv('AWS_S3_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME =os.getenv('AWS_STORAGE_BUCKET_NAME')
