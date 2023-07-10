@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 # Third-party imports
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -38,11 +39,14 @@ class ObtainTokenPairApiView(TokenObtainPairView):
 
 
 class UserLoggoutApiView(APIView):
-    authentication_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
-    def post(self, request, format):
+    def post(self, request, ):
         request.user.auth_token.delete()
-        return Response('User logged out successfully')
+        response = {
+            "message": "User Logged Out Successfully"
+        }
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class CreateAdminUserApiView(generics.CreateAPIView):

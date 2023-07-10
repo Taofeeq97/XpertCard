@@ -141,3 +141,29 @@ class ActivityLogSerializer(serializers.ModelSerializer):
 
 
 
+class ExpertCardElasticSearchSerializer(serializers.Serializer):
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    email = serializers.EmailField()
+    role = serializers.CharField()
+    qr_code = serializers.CharField()
+    tribe = serializers.CharField()
+    company_address = serializers.DictField(child=serializers.CharField())
+    city = serializers.CharField()
+    country = serializers.CharField()
+    phone_number = serializers.CharField()
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        request = self.context.get('request')
+        company_address_slug = instance['company_address']['slug']
+        company_address = CompanyAddress.objects.get(slug=company_address_slug)
+        serializer = CompanyAddressSerializer(company_address)
+
+        if request is not None:
+            retrieve_update_delete_url = serializer.data['retrieve_update_delete_url']
+            representation['company_address'] = request.build_absolute_uri(retrieve_update_delete_url)
+        return representation
+    
+
+

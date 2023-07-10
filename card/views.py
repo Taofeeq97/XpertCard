@@ -25,7 +25,8 @@ from .permissions import AdminOrTrustedUserOnly
 from .serializer import (
     CompanyAddressSerializer,
     ExpertCardSerializer,
-    ActivityLogSerializer
+    ActivityLogSerializer,
+    ExpertCardElasticSearchSerializer
 )
 
 # Create your views here.
@@ -281,6 +282,7 @@ from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 
 class ExpertCardTestListApiView(DocumentViewSet):
     document = ExpertCardDocument
+    
     """
     An endpoint to access the ExpertCard List with elasticsearch Func.
     Authentication is required.
@@ -322,7 +324,7 @@ class ExpertCardTestListApiView(DocumentViewSet):
 
     def list(self, request, *args, **kwargs):
         # Get the search query from the request
-        query = request.GET.get('query')
+        query = request.query_params.get('query')
 
         # Build the Elasticsearch DSL search query
         search = self.document.search()
@@ -334,9 +336,13 @@ class ExpertCardTestListApiView(DocumentViewSet):
         # Execute the search and return the results
         response = search.execute()
         results = [hit.to_dict() for hit in response.hits]
-        print(results)
 
-        return JsonResponse({'results': results})
+        serializer = ExpertCardElasticSearchSerializer(data=results, context={'request': request}, many=True)
+        serializer.is_valid(raise_exception=True)
+        serialized_data = serializer.data
+
+        return Response(serialized_data)
 
 
-        
+
+

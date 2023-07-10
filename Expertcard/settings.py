@@ -44,17 +44,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'rest_framework_swagger',
     'drf_yasg',
-    'rest_framework_simplejwt',
-    'rest_framework',
     'admin_account.apps.AdminAccountConfig',
     'card.apps.CardConfig',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
-    'corsheaders',
     'storages',
-    'rest_framework_simplejwt.token_blacklist',
 ]
 
 
@@ -86,8 +86,11 @@ CORS_ORIGIN_WHITELIST = ('https://web-production-5804.up.railway.app',
 ROOT_URLCONF = 'Expertcard.urls'
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100
+    'PAGE_SIZE': 100,
 }
 
 
