@@ -22,17 +22,17 @@ index_settings = {
             'card_type' : {'type': 'text'},
             'is_active': {'type': 'boolean'},
             'is_deleted': {'type': 'boolean'},
-            'created_date': {'type': 'datetime'},
-            'updated_date': {'type': 'datetime'}
+            'created_date': {'type': 'date'},
+            'updated_date': {'type': 'date'}
         }
     }
 }
 
 # Create the index
-response = es.indices.create(index='xpert_card_index', body=index_settings)
+response = es.indices.create(index='cards_index', body=index_settings)
 
 # Check if the index creation was successful
 if response['acknowledged']:
-    print(f"The index xpert_card_index was created successfully.")
+    print(f"The index cards_index was created successfully.")
 else:
-    print(f"Failed to create the index 'xpert_card_index'.")
+    print(f"Failed to create the index 'cards_index'.")

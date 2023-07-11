@@ -104,7 +104,7 @@ ELASTICSEARCH_DSL = {
 
 
 ELASTICSEARCH_INDEX_NAMES = {
-    'Expertcard.ExpertCard': 'xpert_card_index',
+    'Expertcard.ExpertCard': 'cards_index',
 }
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -173,7 +173,7 @@ SIMPLE_JWT = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db11.sqlite3',
+#         'NAME': BASE_DIR / 'db14.sqlite3',
 #     }
 # }
 

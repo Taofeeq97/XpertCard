@@ -7,7 +7,7 @@ from .models import ExpertCard, CompanyAddress, ActivityLog
 # Register your models here.
 
 class ExpertCardAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'email','role', 'city', 'is_active', 'is_deleted']
+    list_display = ['first_name', 'last_name', 'email','role', 'is_active', 'is_deleted']
     list_editable = ['is_active', 'is_deleted']
  
 

@@ -9,7 +9,7 @@ from .models import ExpertCard, CompanyAddress
 @registry.register_document
 class ExpertCardDocument(Document):
     class Index:
-        name = 'xpert_card_index'
+        name = 'cards_index'
 
     first_name = fields.TextField(
         attr='first_name',
