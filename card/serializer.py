@@ -14,7 +14,7 @@ class CompanyAddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CompanyAddress
-        fields = ('id','address_title', 'retrieve_update_delete_url', 'company_address', 'city', 'country', 'latitude', 'longitude')
+        fields = ('id''address_title', 'retrieve_update_delete_url', 'company_address', 'city', 'country', 'latitude', 'longitude')
     
     def validate_address_title(self, value):
         if CompanyAddress.objects.filter(address_title=value).exists():
@@ -48,7 +48,7 @@ class ExpertCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExpertCard
         fields = ('retrieve_update_delete_url', 'full_name', 'first_name', 'middle_name', 'last_name', 'email',
-                  'profile_picture', 'qr_code', 'role', 'tribe', 'company_address', 'address', 
+                  'profile_picture', 'qr_code', 'role', 'tribe', 'company_address', 'address', 'city', 'country',
                   'phone_number', 'created_date', 'is_active')
         read_only_fields = ('qr_code', 'address','is_active')
         extra_kwargs = {
@@ -94,6 +94,8 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         first_name = validated_data.get('first_name', instance.first_name)
         last_name = validated_data.get('last_name', instance.last_name)
         email = validated_data.get('email', instance.email)
+        city = validated_data.get('city', instance.city)
+        country = validated_data.get('country', instance.country)
         phone_number = validated_data.get('phone_number', instance.phone_number)
         role = validated_data.get('phone_number', instance.role)
         tribe = validated_data.get('phone_number', instance.tribe)
@@ -101,6 +103,8 @@ class ExpertCardSerializer(serializers.ModelSerializer):
             'first_name': first_name,
             'last_name': last_name,
             'email': email,
+            'city': city,
+            'country': country,
             'phone_number': phone_number,
             'tribe':tribe,
             'role':role
