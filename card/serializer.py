@@ -150,6 +150,7 @@ class ExpertCardElasticSearchSerializer(serializers.Serializer):
     tribe = serializers.CharField()
     company_address = serializers.DictField(child=serializers.CharField())
     city = serializers.CharField()
+    card_type = serializers.CharField()
     country = serializers.CharField()
     phone_number = serializers.CharField()
     is_active = serializers.BooleanField()
