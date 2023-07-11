@@ -49,7 +49,7 @@ class ExpertCard(BaseModel):
     qr_code = models.ImageField(upload_to='qr_code', null=True, blank=True)
     tribe = models.CharField(max_length=100,)
     company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True)
-    card_type = models.CharField(max_length=100, choices=CARD_TYPE_CHOICES, default='HII')
+    card_type = models.CharField(max_length=100, choices=CARD_TYPE_CHOICES, null=True, blank=True)
     phone_number = PhoneNumberField()
 
     
