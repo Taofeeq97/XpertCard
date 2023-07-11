@@ -136,7 +136,7 @@ class ExpertCardListApiView(generics.ListAPIView):
     with search functionalities usinf first name, last_name or email
     USE "search_query"
     """
-    queryset = ExpertCard.active_objects.filter(is_deleted=False).order_by('-created_date')
+    queryset = ExpertCard.objects.filter(is_deleted=False).order_by('-created_date')
     pagination_class = StandardResultPagination
     permission_classes = [AdminOrTrustedUserOnly]
     serializer_class = ExpertCardSerializer

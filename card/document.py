@@ -47,6 +47,8 @@ class ExpertCardDocument(Document):
     phone_number = fields.TextField(attr='phone_number.as_national')
     is_active = fields.BooleanField(attr='is_active')
     is_deleted = fields.BooleanField(attr='is_deleted')
+    created_date = fields.DateField(attr='created_date')
+    updated_date = fields.DateField(attr='updated_date')
 
 
     class Django:

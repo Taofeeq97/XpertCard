@@ -50,7 +50,7 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         fields = ('retrieve_update_delete_url', 'full_name', 'first_name', 'middle_name', 'last_name', 'email',
                   'profile_picture', 'qr_code', 'role', 'tribe', 'company_address', 'address', 'city', 'country',
                   'phone_number', 'created_date', 'is_active')
-        read_only_fields = ('qr_code', 'address',)
+        read_only_fields = ('qr_code', 'address','is_active')
         extra_kwargs = {
             'company_address': {'write_only': True},
             'created_date': {'read_only': True},
@@ -140,13 +140,13 @@ class ActivityLogSerializer(serializers.ModelSerializer):
         return None
 
 
-
 class ExpertCardElasticSearchSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     email = serializers.EmailField()
     role = serializers.CharField()
     qr_code = serializers.CharField()
+    profile_picture  = serializers.CharField()
     tribe = serializers.CharField()
     company_address = serializers.DictField(child=serializers.CharField())
     city = serializers.CharField()
@@ -154,19 +154,27 @@ class ExpertCardElasticSearchSerializer(serializers.Serializer):
     phone_number = serializers.CharField()
     is_active = serializers.BooleanField()
     is_deleted = serializers.BooleanField()
+    created_date = serializers.DateTimeField()
+    updated_date = serializers.DateTimeField()
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         request = self.context.get('request')
         company_address_slug = instance['company_address']['slug']
+        expert_card =ExpertCard.objects.get(email = instance['email'])
+        serialized_expert_card = ExpertCardSerializer(expert_card)
         company_address = CompanyAddress.objects.get(slug=company_address_slug)
         serializer = CompanyAddressSerializer(company_address)
 
         if request is not None:
             retrieve_update_delete_url = serializer.data['retrieve_update_delete_url']
+            expertcard_url = serialized_expert_card.data['retrieve_update_delete_url']
             representation['company_address'] = request.build_absolute_uri(retrieve_update_delete_url)
-
+            representation['retrieve_update_delete_url'] = request.build_absolute_uri(expertcard_url)
+            
         return representation
+    
+    
     
 
 

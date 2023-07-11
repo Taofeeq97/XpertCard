@@ -38,6 +38,7 @@ class ExpertCard(BaseModel):
     city = models.CharField(max_length=225)
     country = models.CharField(max_length=30,choices=COUNTRY_CHOICES)
     phone_number = PhoneNumberField()
+
     
 
     class Meta:

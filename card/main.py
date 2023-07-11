@@ -13,25 +13,27 @@ index_settings = {
             'first_name': {'type': 'text'},
             'last_name': {'type': 'text'},
             'email': {'type': 'text'},
-            'profile_picture': {'type': 'keyword'},  # Change the type to 'keyword'
+            'profile_picture': {'type': 'keyword'},
             'role': {'type': 'text'},
-            'qr_code': {'type': 'keyword'},  # Change the type to 'keyword'
+            'qr_code': {'type': 'keyword'},
             'tribe': {'type': 'text'},
-            'company_address': {'type': 'nested'},  # Change the type to 'nested'
+            'company_address': {'type': 'nested'},
             'city': {'type': 'text'},
             'country': {'type': 'text'},
             'phone_number': {'type': 'text'},
             'is_active': {'type': 'boolean'},
-            'is_deleted': {'type': 'boolean'}
+            'is_deleted': {'type': 'boolean'},
+            'created_date': {'type': 'datetime'},
+            'updated_date': {'type': 'datetime'}
         }
     }
 }
 
 # Create the index
-response = es.indices.create(index='xpert_card', body=index_settings)
+response = es.indices.create(index='xpert_card_index', body=index_settings)
 
 # Check if the index creation was successful
 if response['acknowledged']:
-    print(f"The index 'xpert_card was created successfully.")
+    print(f"The index xpert_card_index was created successfully.")
 else:
-    print(f"Failed to create the index 'xpert_card'.")
+    print(f"Failed to create the index 'xpert_card_index'.")
