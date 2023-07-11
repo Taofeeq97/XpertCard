@@ -35,7 +35,7 @@ class ExpertCard(BaseModel):
     qr_code = models.ImageField(upload_to='qr_code', null=True, blank=True)
     tribe = models.CharField(max_length=100,)
     company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True)
-    city = models.CharField(max_length=225)
+    city = models.CharField(max_length=225, null=True, blank=)
     country = models.CharField(max_length=30,choices=COUNTRY_CHOICES)
     phone_number = PhoneNumberField()
 
