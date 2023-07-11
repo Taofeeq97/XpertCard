@@ -19,10 +19,24 @@ from admin_account.models import CustomAdminUser
 nigeria = constants.NIGERIA
 kenya = constants.KENYA
 uganda = constants.UGANDA
+landscape1 =constants.LANDSCAPE1
+landscape2 = constants.LANDSCAPE2
+portrait1 = constants.PORTRAIT1
+portrait2 = constants.PORTRAIT2
+
+
 COUNTRY_CHOICES = (
         ('Nigeria', nigeria),
         ('Kenya', kenya),
         ('uganda', uganda)
+    )
+
+
+CARD_TYPE_CHOICES = (
+        ('Landscape1', landscape1),
+        ('Landscape2', landscape2),
+        ('Portrait1', portrait1),
+        ('Portrait2', portrait2)
     )
 
 class ExpertCard(BaseModel):
@@ -37,6 +51,7 @@ class ExpertCard(BaseModel):
     company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True)
     city = models.CharField(max_length=225, null=True, blank=True)
     country = models.CharField(max_length=30,choices=COUNTRY_CHOICES, blank=True, null=True)
+    card_type = models.CharField(max_length=100, choices=CARD_TYPE_CHOICES, null=True, blank=True)
     phone_number = PhoneNumberField()
 
     
