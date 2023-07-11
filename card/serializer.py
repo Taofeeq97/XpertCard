@@ -165,7 +165,7 @@ class ExpertCardElasticSearchSerializer(serializers.Serializer):
         if request is not None:
             retrieve_update_delete_url = serializer.data['retrieve_update_delete_url']
             representation['company_address'] = request.build_absolute_uri(retrieve_update_delete_url)
-            representation['url'] = r
+
         return representation
     
 
