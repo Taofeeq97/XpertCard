@@ -14,7 +14,6 @@ def generate_qr_code(data):
             f"TEL:{data['phone_number']}\n" \
             f"ORG:{data['tribe']}\n" \
             f"TITLE:{data['role']}\n" \
-            f"ADR;TYPE=WORK:;;{data['city']};;{data['country']}\n" \
             f"END:VCARD"
     qr = qrcode.QRCode(
         version=1,
