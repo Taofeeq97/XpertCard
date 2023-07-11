@@ -1,13 +1,13 @@
 # Standard library imports
-from elasticsearch_dsl import Q
+# from elasticsearch_dsl import Q
 from django.db.models import Q
 
-# Third-party imports
-from django_elasticsearch_dsl_drf.filter_backends import (
-    FilteringFilterBackend,
-    OrderingFilterBackend,
-    CompoundSearchFilterBackend
-)
+# # Third-party imports
+# from django_elasticsearch_dsl_drf.filter_backends import (
+#     FilteringFilterBackend,
+#     OrderingFilterBackend,
+#     CompoundSearchFilterBackend
+# )
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -26,13 +26,12 @@ from .serializer import (
     CompanyAddressSerializer,
     ExpertCardSerializer,
     ActivityLogSerializer,
-    ExpertCardElasticSearchSerializer
 )
 
 # Create your views here.
 
 
-class CompanyAddressListApiView(generics.ListAPIView):
+class CompanyAddressListApiView(AdminOrTrustedUserOnly,generics.ListAPIView):
     """
     An endpoint to access Company Address List
     Authentication is required
@@ -44,7 +43,7 @@ class CompanyAddressListApiView(generics.ListAPIView):
     serializer_class = CompanyAddressSerializer
 
 
-class CompanyAddressCreateApiView(generics.CreateAPIView):
+class CompanyAddressCreateApiView(AdminOrTrustedUserOnly, generics.CreateAPIView):
     """
     -An endpoint to create A company Address
     -Authentication is required
@@ -65,7 +64,7 @@ class CompanyAddressCreateApiView(generics.CreateAPIView):
         return Response(response, status=status.HTTP_201_CREATED)
     
 
-class CompanyAddressDetailUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
+class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.RetrieveUpdateDestroyAPIView):
     """
     An endpoint to Access, Update or Delete A company Address instance
     Authentication is required
@@ -105,7 +104,7 @@ class CompanyAddressDetailUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIV
         return Response(response, status=status.HTTP_204_NO_CONTENT)
     
 
-class ActiveExpertCardListApiView(generics.ListAPIView):
+class ActiveExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     """
     An endpoint to Access ExpertCard List
     Authentication is required
@@ -117,7 +116,7 @@ class ActiveExpertCardListApiView(generics.ListAPIView):
     serializer_class = ExpertCardSerializer
 
 
-class InctiveExpertCardListApiView(generics.ListAPIView):
+class InctiveExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     """
     An endpoint to Access ExpertCard List
     Authentication is required
@@ -129,7 +128,7 @@ class InctiveExpertCardListApiView(generics.ListAPIView):
     serializer_class = ExpertCardSerializer
 
 
-class ExpertCardListApiView(generics.ListAPIView):
+class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     """
     An endpoint to access the ExpertCard List.
     Authentication is required.
@@ -273,84 +272,84 @@ class ActivityLogAPIView(generics.ListAPIView):
 
 
 
-from django.http import JsonResponse
-from elasticsearch_dsl.query import Q
+# from django.http import JsonResponse
+# from elasticsearch_dsl.query import Q
 
-from django.http import JsonResponse
-from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
+# from django.http import JsonResponse
+# from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 
 
 
-class ExpertCardTestListApiView(DocumentViewSet):
-    document = ExpertCardDocument
+# class ExpertCardTestListApiView(DocumentViewSet):
+#     document = ExpertCardDocument
     
-    """
-    An endpoint to access the ExpertCard List with Elasticsearch Func.
-    Authentication is required.
-    """
+#     """
+#     An endpoint to access the ExpertCard List with Elasticsearch Func.
+#     Authentication is required.
+#     """
 
-    filter_backends = [
-        FilteringFilterBackend,
-        OrderingFilterBackend,
-        CompoundSearchFilterBackend,
-    ]
+#     filter_backends = [
+#         FilteringFilterBackend,
+#         OrderingFilterBackend,
+#         CompoundSearchFilterBackend,
+#     ]
 
-    # Define the filtering fields
-    filter_fields = {
-        'first_name': 'first_name.raw',
-        'last_name': 'last_name.raw',
-        'email': 'email.raw',
-    }
+#     # Define the filtering fields
+#     filter_fields = {
+#         'first_name': 'first_name.raw',
+#         'last_name': 'last_name.raw',
+#         'email': 'email.raw',
+#     }
 
-    # Define the ordering fields
-    ordering_fields = {
-        'first_name': 'first_name',
-        'last_name': 'last_name',
-        'created_date': 'created_date',
-    }
+#     # Define the ordering fields
+#     ordering_fields = {
+#         'first_name': 'first_name',
+#         'last_name': 'last_name',
+#         'created_date': 'created_date',
+#     }
 
-    # Define the search fields
-    search_fields = (
-        'first_name',
-        'last_name',
-        'profile_picture',
-        'role',
-        'tribe',
-        'qr_code',
-        'company_address',
-        'city',
-        'country',
-        'phone_number'
-    )
+#     # Define the search fields
+#     search_fields = (
+#         'first_name',
+#         'last_name',
+#         'profile_picture',
+#         'role',
+#         'tribe',
+#         'qr_code',
+#         'company_address',
+#         'city',
+#         'country',
+#         'phone_number'
+#     )
 
-    def list(self, request, *args, **kwargs):
-        # Get the search query from the request
-        query = request.query_params.get('query')
+#     def list(self, request, *args, **kwargs):
+#         # Get the search query from the request
+#         query = request.query_params.get('query')
 
-        # Build the Elasticsearch DSL search query
-        search = self.document.search()
+#         # Build the Elasticsearch DSL search query
+#         search = self.document.search()
 
-        # Apply filters based on query parameters
-        if query:
-            search = search.query(
-                Q('multi_match', query=query, fields=['first_name', 'last_name', 'email'])
-            ).suggest(
-                'first_name_suggest', query, completion={'field': 'first_name.suggest'}
-            ).suggest(
-                'last_name_suggest', query, completion={'field': 'last_name.suggest'}
-            ).suggest(
-                'email_suggest', query, completion={'field': 'email.suggest'}
-            )
+#         # Apply filters based on query parameters
+#         if query:
+#             search = search.query(
+#                 Q('multi_match', query=query, fields=['first_name', 'last_name', 'email'])
+#             ).suggest(
+#                 'first_name_suggest', query, completion={'field': 'first_name.suggest'}
+#             ).suggest(
+#                 'last_name_suggest', query, completion={'field': 'last_name.suggest'}
+#             ).suggest(
+#                 'email_suggest', query, completion={'field': 'email.suggest'}
+#             )
 
-        # Execute the search and return the results
-        response = search.execute()
-        results = [hit.to_dict() for hit in response.hits]
+#         # Execute the search and return the results
+#         response = search.execute()
+#         results = [hit.to_dict() for hit in response.hits]
 
-        serializer = ExpertCardElasticSearchSerializer(data=results, context={'request': request}, many=True)
-        serializer.is_valid(raise_exception=True)
-        serialized_data = serializer.data
+#         serializer = ExpertCardElasticSearchSerializer(data=results, context={'request': request}, many=True)
+#         serializer.is_valid(raise_exception=True)
+#         serialized_data = serializer.data
 
-        return Response(serialized_data)
+#         return Response(serialized_data)
 
 
 

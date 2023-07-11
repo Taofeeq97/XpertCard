@@ -52,8 +52,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'admin_account.apps.AdminAccountConfig',
     'card.apps.CardConfig',
-    'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
+    # 'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl_drf',
     'storages',
 ]
 
@@ -94,18 +94,18 @@ REST_FRAMEWORK = {
 }
 
 
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': os.getenv('ELASTICSEARCH_HOSTS'),
-        'http_auth': (os.getenv('ELASTICSEARCH_HTTP_AUTH_USERNAME'), os.getenv('ELASTICSEARCH_HTTP_AUTH_PASSWORD')),
-    },
+# ELASTICSEARCH_DSL = {
+#     'default': {
+#         'hosts': os.getenv('ELASTICSEARCH_HOSTS'),
+#         'http_auth': (os.getenv('ELASTICSEARCH_HTTP_AUTH_USERNAME'), os.getenv('ELASTICSEARCH_HTTP_AUTH_PASSWORD')),
+#     },
 
-}
+# }
 
 
-ELASTICSEARCH_INDEX_NAMES = {
-    'Expertcard.ExpertCard': 'cards',
-}
+# ELASTICSEARCH_INDEX_NAMES = {
+#     'Expertcard.ExpertCard': 'cards',
+# }
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
