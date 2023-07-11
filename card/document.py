@@ -42,8 +42,7 @@ class ExpertCardDocument(Document):
         'latitude': fields.TextField(),
         'longitude': fields.TextField(),
     })
-    city = fields.TextField(attr='city')
-    country = fields.TextField(attr='country')
+    card_type = fields.TextField(attr='card_type')
     phone_number = fields.TextField(attr='phone_number.as_national')
     is_active = fields.BooleanField(attr='is_active')
     is_deleted = fields.BooleanField(attr='is_deleted')
