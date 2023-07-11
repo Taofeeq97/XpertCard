@@ -44,7 +44,7 @@ class ExpertCard(BaseModel):
     middle_name = models.CharField(max_length=225, null=True, blank=True)
     last_name= models.CharField(max_length=225)
     email = models.EmailField(unique=True)
-    profile_picture = models.ImageField(upload_to='media', validators=[ ValidateimageSize], null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='media', validators=[ ValidateimageSize])
     role = models.CharField(max_length=100,)
     qr_code = models.ImageField(upload_to='qr_code', null=True, blank=True)
     tribe = models.CharField(max_length=100,)
