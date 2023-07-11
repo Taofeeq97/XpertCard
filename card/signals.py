@@ -38,10 +38,10 @@ def log_user_login_failed(sender, credentials, request, **kwargs):
 
 
 
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
+# from django.db.models.signals import post_save, post_delete
+# from django.dispatch import receiver
 
-from django_elasticsearch_dsl.registries import registry
+# from django_elasticsearch_dsl.registries import registry
 
 
 # @receiver(post_save)

@@ -29,7 +29,7 @@ index_settings = {
 }
 
 # Create the index
-response = es.indices.create(index='cards_index', body=index_settings)
+response = es.indices.create(index='cards', body=index_settings)
 
 # Check if the index creation was successful
 if response['acknowledged']:

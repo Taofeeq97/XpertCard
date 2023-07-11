@@ -104,7 +104,7 @@ ELASTICSEARCH_DSL = {
 
 
 ELASTICSEARCH_INDEX_NAMES = {
-    'Expertcard.ExpertCard': 'cards_index',
+    'Expertcard.ExpertCard': 'cards',
 }
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
