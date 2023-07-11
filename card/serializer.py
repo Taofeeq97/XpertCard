@@ -14,7 +14,7 @@ class CompanyAddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CompanyAddress
-        fields = ('address_title', 'retrieve_update_delete_url', 'company_address', 'city', 'country', 'latitude', 'longitude')
+        fields = ('id','address_title', 'retrieve_update_delete_url', 'company_address', 'city', 'country', 'latitude', 'longitude')
     
     def validate_address_title(self, value):
         if CompanyAddress.objects.filter(address_title=value).exists():
