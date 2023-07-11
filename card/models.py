@@ -36,7 +36,7 @@ class ExpertCard(BaseModel):
     tribe = models.CharField(max_length=100,)
     company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True)
     city = models.CharField(max_length=225, null=True, blank=True)
-    country = models.CharField(max_length=30,choices=COUNTRY_CHOICES)
+    country = models.CharField(max_length=30,choices=COUNTRY_CHOICES, blank=True, null=True)
     phone_number = PhoneNumberField()
 
     
