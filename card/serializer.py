@@ -152,7 +152,8 @@ class ExpertCardElasticSearchSerializer(serializers.Serializer):
     city = serializers.CharField()
     country = serializers.CharField()
     phone_number = serializers.CharField()
-    # is_active = serializers.BooleanField()
+    is_active = serializers.BooleanField()
+    is_deleted = serializers.BooleanField()
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -164,6 +165,7 @@ class ExpertCardElasticSearchSerializer(serializers.Serializer):
         if request is not None:
             retrieve_update_delete_url = serializer.data['retrieve_update_delete_url']
             representation['company_address'] = request.build_absolute_uri(retrieve_update_delete_url)
+            representation['url'] = r
         return representation
     
 

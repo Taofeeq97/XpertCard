@@ -40,3 +40,5 @@ class ActivityLogMixin:
             content_object=instance,
             data=message,
         )
+
+        

@@ -21,15 +21,17 @@ index_settings = {
             'city': {'type': 'text'},
             'country': {'type': 'text'},
             'phone_number': {'type': 'text'},
+            'is_active': {'type': 'boolean'},
+            'is_deleted': {'type': 'boolean'}
         }
     }
 }
 
 # Create the index
-response = es.indices.create(index='xpertcards_index', body=index_settings)
+response = es.indices.create(index='xpert_card', body=index_settings)
 
 # Check if the index creation was successful
 if response['acknowledged']:
-    print(f"The index 'xpertcards_index' was created successfully.")
+    print(f"The index 'xpert_card was created successfully.")
 else:
-    print(f"Failed to create the index 'xpertcards_index'.")
+    print(f"Failed to create the index 'xpert_card'.")

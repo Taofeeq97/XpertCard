@@ -53,6 +53,7 @@ class LoginSerializer(serializers.Serializer):
         response = {
             'email': email,
             'first_name':user.first_name,
+            'profile_picture': user.profile_picture.url,
             'last_name': user.last_name,
             'token': token,
         }

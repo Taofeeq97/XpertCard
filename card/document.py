@@ -9,7 +9,7 @@ from .models import ExpertCard, CompanyAddress
 @registry.register_document
 class ExpertCardDocument(Document):
     class Index:
-        name = 'xpertcards_index'
+        name = 'xpert_card_index'
 
     first_name = fields.TextField(
         attr='first_name',
@@ -45,7 +45,8 @@ class ExpertCardDocument(Document):
     city = fields.TextField(attr='city')
     country = fields.TextField(attr='country')
     phone_number = fields.TextField(attr='phone_number.as_national')
-    # is_acctive = fields.BooleanField(attr='is_active')
+    is_active = fields.BooleanField(attr='is_active')
+    is_deleted = fields.BooleanField(attr='is_deleted')
 
 
     class Django:
