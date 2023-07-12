@@ -243,7 +243,6 @@ class BulkActivateExpertCardApiView(generics.UpdateAPIView):
     queryset = ExpertCard.objects.all()
     permission_classes = [AdminOrTrustedUserOnly]
 
-
     def update(self, request, *args, **kwargs):
         expert_card_ids = request.data.get('expert_card_ids', [])
         expert_cards = ExpertCard.objects.filter(id__in=expert_card_ids)
