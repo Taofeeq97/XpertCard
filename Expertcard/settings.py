@@ -52,8 +52,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'admin_account.apps.AdminAccountConfig',
     'card.apps.CardConfig',
-    'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
+    # 'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl_drf',
     "phonenumber_field",
     'storages',
 ]
@@ -107,9 +107,9 @@ ELASTICSEARCH_DSL = {
 }
 
 
-ELASTICSEARCH_INDEX_NAMES = {
-    'Expertcard.ExpertCard': 'card_el_index',
-}
+# ELASTICSEARCH_INDEX_NAMES = {
+#     'Expertcard.ExpertCard': 'card_el_index',
+# }
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
