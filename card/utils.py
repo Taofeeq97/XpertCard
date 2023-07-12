@@ -12,7 +12,7 @@ def generate_qr_code(data):
             f"N:{data['last_name']};{data['first_name']}\n" \
             f"EMAIL:{data['email']}\n" \
             f"TEL:{data['phone_number']}\n" \
-            f"ORG:{data['tribe']}\n" \
+            f"ORG:{'AFEX'}\n" \
             f"TITLE:{data['role']}\n" \
             f"END:VCARD"
     qr = qrcode.QRCode(

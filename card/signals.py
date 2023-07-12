@@ -1,8 +1,11 @@
 # Django imports
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in, user_login_failed
 from django.utils.text import slugify
+from django.dispatch import receiver
+from django_elasticsearch_dsl.registries import registry
+
 
 # Local imports
 from .models import CompanyAddress, ActivityLog
@@ -37,34 +40,27 @@ def log_user_login_failed(sender, credentials, request, **kwargs):
     ActivityLog.objects.create(action_type=LOGIN_FAILED)
 
 
+@receiver(post_save)
+def update_document(sender, **kwargs):
+    app_label = sender._meta.app_label
+    model_name = sender._meta.model_name
+    instance = kwargs['instance']
 
-# from django.db.models.signals import post_save, post_delete
-# from django.dispatch import receiver
-
-# from django_elasticsearch_dsl.registries import registry
-
-
-# @receiver(post_save)
-# def update_document(sender, **kwargs):
-#     app_label = sender._meta.app_label
-#     model_name = sender._meta.model_name
-#     instance = kwargs['instance']
-
-#     if app_label == 'card':
-#         if model_name == 'Expertcard':
-#             instances = instance.article.all()
-#             for _instance in instances:
-#                 registry.update(_instance)
+    if app_label == 'card':
+        if model_name == 'Expertcard':
+            instances = instance.article.all()
+            for _instance in instances:
+                registry.update(_instance)
 
 
-# @receiver(post_delete)
-# def delete_document(sender, **kwargs):
-#     app_label = sender._meta.app_label
-#     model_name = sender._meta.model_name
-#     instance = kwargs['instance']
+@receiver(post_delete)
+def delete_document(sender, **kwargs):
+    app_label = sender._meta.app_label
+    model_name = sender._meta.model_name
+    instance = kwargs['instance']
 
-#     if app_label == 'card':
-#         if model_name == 'Expertcard':
-#             instances = instance.article.all()
-#             for _instance in instances:
-#                 registry.update(_instance)
+    if app_label == 'card':
+        if model_name == 'Expertcard':
+            instances = instance.article.all()
+            for _instance in instances:
+                registry.update(_instance)

@@ -55,21 +55,23 @@ class ExpertCardSerializer(serializers.ModelSerializer):
             'qr_code': {'read_only': True},       
         }
 
-    def get_created_date(self, obj):
-        date = obj.created_date
-        refined_date = date.date().isoformat()
-        return refined_date
-
     def validate_email(self, value):
         if not value.endswith(('afexafricaexchange.com', 'afexafrica.com', 'afexnigeria.com')):
             raise serializers.ValidationError('Invalid email format')
         return value
     
+    def get_created_date(self, obj):
+        refined_date = obj.created_date.date().isoformat()
+        return refined_date
+    
     def get_address(self, obj):
         address_id = obj.company_address.id
-        comp_address = CompanyAddress.objects.get(id=address_id)
-        serializer = CompanyAddressSerializer(comp_address, context=self.context)
-        return serializer.data['retrieve_update_delete_url']
+        try:
+            comp_address = CompanyAddress.objects.get(id=address_id)
+            serializer = CompanyAddressSerializer(comp_address, context=self.context)
+            return serializer.data['retrieve_update_delete_url']
+        except CompanyAddress.DoesNotExist:
+            return None
 
     def get_full_name(self, obj):
         first_name = obj.first_name.capitalize()
@@ -92,8 +94,6 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         first_name = validated_data.get('first_name', instance.first_name)
         last_name = validated_data.get('last_name', instance.last_name)
         email = validated_data.get('email', instance.email)
-        city = validated_data.get('city', instance.city)
-        country = validated_data.get('country', instance.country)
         phone_number = validated_data.get('phone_number', instance.phone_number)
         role = validated_data.get('phone_number', instance.role)
         tribe = validated_data.get('phone_number', instance.tribe)
@@ -101,8 +101,6 @@ class ExpertCardSerializer(serializers.ModelSerializer):
             'first_name': first_name,
             'last_name': last_name,
             'email': email,
-            'city': city,
-            'country': country,
             'phone_number': phone_number,
             'tribe':tribe,
             'role':role
@@ -138,40 +136,38 @@ class ActivityLogSerializer(serializers.ModelSerializer):
         return None
 
 
-# class ExpertCardElasticSearchSerializer(serializers.Serializer):
-#     first_name = serializers.CharField()
-#     last_name = serializers.CharField()
-#     email = serializers.EmailField()
-#     role = serializers.CharField()
-#     qr_code = serializers.CharField()
-#     profile_picture  = serializers.CharField()
-#     tribe = serializers.CharField()
-#     company_address = serializers.DictField(child=serializers.CharField())
-#     city = serializers.CharField()
-#     card_type = serializers.CharField()
-#     country = serializers.CharField()
-#     phone_number = serializers.CharField()
-#     is_active = serializers.BooleanField()
-#     is_deleted = serializers.BooleanField()
-#     created_date = serializers.DateTimeField()
-#     updated_date = serializers.DateTimeField()
+class ExpertCardElasticSearchSerializer(serializers.Serializer):
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    email = serializers.EmailField()
+    role = serializers.CharField()
+    qr_code = serializers.CharField()
+    profile_picture  = serializers.CharField()
+    tribe = serializers.CharField()
+    company_address = serializers.DictField(child=serializers.CharField())
+    card_type = serializers.CharField()
+    phone_number = serializers.CharField()
+    is_active = serializers.BooleanField()
+    is_deleted = serializers.BooleanField()
+    created_date = serializers.DateTimeField()
+    updated_date = serializers.DateTimeField()
 
-#     def to_representation(self, instance):
-#         representation = super().to_representation(instance)
-#         request = self.context.get('request')
-#         company_address_slug = instance['company_address']['slug']
-#         expert_card =ExpertCard.objects.get(email = instance['email'])
-#         serialized_expert_card = ExpertCardSerializer(expert_card)
-#         company_address = CompanyAddress.objects.get(slug=company_address_slug)
-#         serializer = CompanyAddressSerializer(company_address)
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        request = self.context.get('request')
+        company_address_slug = instance['company_address']['slug']
+        expert_card =ExpertCard.objects.get(email = instance['email'])
+        serialized_expert_card = ExpertCardSerializer(expert_card)
+        company_address = CompanyAddress.objects.get(slug=company_address_slug)
+        serializer = CompanyAddressSerializer(company_address)
 
-#         if request is not None:
-#             retrieve_update_delete_url = serializer.data['retrieve_update_delete_url']
-#             expertcard_url = serialized_expert_card.data['retrieve_update_delete_url']
-#             representation['company_address'] = request.build_absolute_uri(retrieve_update_delete_url)
-#             representation['retrieve_update_delete_url'] = request.build_absolute_uri(expertcard_url)
+        if request is not None:
+            retrieve_update_delete_url = serializer.data['retrieve_update_delete_url']
+            expertcard_url = serialized_expert_card.data['retrieve_update_delete_url']
+            representation['company_address'] = request.build_absolute_uri(retrieve_update_delete_url)
+            representation['retrieve_update_delete_url'] = request.build_absolute_uri(expertcard_url)
             
-#         return representation
+        return representation
     
     
     

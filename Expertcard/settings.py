@@ -52,8 +52,9 @@ INSTALLED_APPS = [
     'drf_yasg',
     'admin_account.apps.AdminAccountConfig',
     'card.apps.CardConfig',
-    # 'django_elasticsearch_dsl',
-    # 'django_elasticsearch_dsl_drf',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
+    "phonenumber_field",
     'storages',
 ]
 
@@ -81,6 +82,9 @@ CORS_ORIGIN_WHITELIST = ('https://web-production-5804.up.railway.app', 'https://
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
+PHONENUMBER_DEFAULT_REGION = None
+PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
+
 
 
 ROOT_URLCONF = 'Expertcard.urls'
@@ -94,18 +98,18 @@ REST_FRAMEWORK = {
 }
 
 
-# ELASTICSEARCH_DSL = {
-#     'default': {
-#         'hosts': os.getenv('ELASTICSEARCH_HOSTS'),
-#         'http_auth': (os.getenv('ELASTICSEARCH_HTTP_AUTH_USERNAME'), os.getenv('ELASTICSEARCH_HTTP_AUTH_PASSWORD')),
-#     },
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': os.getenv('ELASTICSEARCH_HOSTS'),
+        'http_auth': (os.getenv('ELASTICSEARCH_HTTP_AUTH_USERNAME'), os.getenv('ELASTICSEARCH_HTTP_AUTH_PASSWORD')),
+    },
 
-# }
+}
 
 
-# ELASTICSEARCH_INDEX_NAMES = {
-#     'Expertcard.ExpertCard': 'cards',
-# }
+ELASTICSEARCH_INDEX_NAMES = {
+    'Expertcard.ExpertCard': 'card_el_index',
+}
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -180,6 +184,7 @@ SIMPLE_JWT = {
 DATABASES = {
     'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
 }
+
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 # DATABASES = {
 #     'default': {
