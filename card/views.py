@@ -149,14 +149,14 @@ class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
 
         if card_type and search_query:
             queryset = queryset.filter(
-                Q(card_type = card_type) and
+                Q(card_type__icontains = card_type) and
                 Q(first_name__icontains=search_query) |
                 Q(last_name__icontains=search_query) |
                 Q(email__icontains=search_query)
             )
         if card_type:
             queryset = queryset.filter(
-                Q(card_type = card_type)
+                Q(card_type__icontains = card_type)
             )
 
         if search_query:
