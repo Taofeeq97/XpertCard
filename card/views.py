@@ -117,16 +117,17 @@ class ActiveExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     serializer_class = ExpertCardSerializer
 
 
-class InctiveExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
-    """
-    An endpoint to Access ExpertCard List
-    Authentication is required
+# class CardTypeExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
+#     """
+#     An endpoint to Access 
+#     Authentication is required
 
-    """
-    queryset=ExpertCard.objects.filter(is_active=False, is_deleted = False).order_by('-created_date')
-    pagination_class = StandardResultPagination
-    permission_classes = [AdminOrTrustedUserOnly]
-    serializer_class = ExpertCardSerializer
+#     """
+#     card_type  = self.request.query_params.get('card_type')
+#     queryset=ExpertCard.objects.filter(card_type=card_type, is_active=True, is_deleted = False).order_by('-created_date')
+#     pagination_class = StandardResultPagination
+#     permission_classes = [AdminOrTrustedUserOnly]
+#     serializer_class = ExpertCardSerializer
 
 
 class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
@@ -144,14 +145,27 @@ class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     def get_queryset(self):
         queryset = super().get_queryset()
         search_query = self.request.query_params.get('search_query')
+        card_type  = self.request.query_params.get('card_type')
+
+        if card_type and search_query:
+            queryset = queryset.filter(
+                Q(card_type = card_type) and
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(email__icontains=search_query)
+            )
+        if card_type:
+            queryset = queryset.filter(
+                Q(card_type = card_type)
+            )
 
         if search_query:
-            # Apply search filter using Q objects
             queryset = queryset.filter(
                 Q(first_name__icontains=search_query) |
                 Q(last_name__icontains=search_query) |
                 Q(email__icontains=search_query)
             )
+
         return queryset
 
 

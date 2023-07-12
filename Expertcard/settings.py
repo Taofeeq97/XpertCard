@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     # 'django_elasticsearch_dsl_drf',
     "phonenumber_field",
     'storages',
+    'django_filters',
 ]
 
 
@@ -85,6 +86,9 @@ CORS_ORIGIN_WHITELIST = ('https://web-production-5804.up.railway.app', 'https://
 PHONENUMBER_DEFAULT_REGION = None
 PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 
 ROOT_URLCONF = 'Expertcard.urls'
