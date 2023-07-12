@@ -12,7 +12,7 @@ urlpatterns = [
     path('expert_cards/active/', views.ActiveExpertCardListApiView.as_view(), name='expert_card_list'),
     # path('expert_cards/inactive/', views.InctiveExpertCardListApiView.as_view(), name='expert_card_list'),
     path('expert_cards/create/', views.ExpertCardCreateApiView.as_view(), name='expert_card_create'),
-    path('expert_cards/bulk_activate/', views.ExpertCardCreateApiView.as_view(), name='expert_card_create'),
+    path('expert_cards/bulk_activate/', views.BulkActivateExpertCardApiView.as_view(), name='expert_card_create'),
     path('expert_cards/<int:expert_id>/', views.ExpertCardRetrieveUpdateDeleteApiView.as_view(), name='expert_card_detail_create_update_delete'),
     path('activity_log/', views.ActivityLogAPIView.as_view(), name='activity_log')
     

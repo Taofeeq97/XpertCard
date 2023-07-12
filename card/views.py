@@ -134,8 +134,7 @@ class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     """
     An endpoint to access the ExpertCard List.
     Authentication is required.
-    with search functionalities usinf first name, last_name or email
-    USE "search_query"
+    with search functionalities using first name, last_name, email or card_type
     """
     queryset = ExpertCard.objects.filter(is_deleted=False).order_by('-created_date')
     pagination_class = StandardResultPagination
@@ -243,7 +242,7 @@ class BulkActivateExpertCardApiView(generics.UpdateAPIView):
     """
     queryset = ExpertCard.objects.all()
     permission_classes = [AdminOrTrustedUserOnly]
-    serializer_class = ExpertCardSerializer
+
 
     def update(self, request, *args, **kwargs):
         expert_card_ids = request.data.get('expert_card_ids', [])
