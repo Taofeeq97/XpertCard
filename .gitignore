@@ -5,3 +5,5 @@ db11.sqlite3
 db14.sqlite3
 virtualenv
 /virtualenv
+docker-compose.yml
+Dockerfile
