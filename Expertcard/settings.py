@@ -264,12 +264,22 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
+ACCESS_KEY = os.getenv('AWS_S3_ACCESS_KEY_ID')
+SECRET_KEY_BROKER = os.getenv('AWS_S3_SECRET_ACCESS_KEY')
 #celerybeat configuration
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_BROKER_URL = f"sqs://{ACCESS_KEY}:{SECRET_KEY_BROKER}@"
+
+BROKER_TRANSPORT_OPTIONS = {
+    'region': 'us-east-1',  # Replace with your desired AWS region
+    'queue_name_prefix': 'expertcard_queue',
+}
+CELERY_DEFAULT_QUEUE = 'expertcard_queue'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Lagos/Africa'
+CELERY_BROKER_TRANSPORT_OPTIONS =BROKER_TRANSPORT_OPTIONS
+CELERY_TIMEZONE = 'Africa/Lagos'
+CELERY_TASK_ACCEPT_CONTENT = 'expertcard_queue'
 
 #aws s3 bucket configuration
 AWS_QUERYSTRING_AUTH= False

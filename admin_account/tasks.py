@@ -9,3 +9,4 @@ def send_email_fun(subject, message, sender, receiver):
 
 # def send_email(subject, message, sender, receiver):
 #     app.send_task('send_mail', args=[subject, message, sender, receiver])
+
