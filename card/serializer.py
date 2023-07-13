@@ -76,7 +76,7 @@ class ExpertCardSerializer(serializers.ModelSerializer):
     def get_full_name(self, obj):
         first_name = obj.first_name.capitalize()
         middle_name = obj.middle_name.capitalize() if obj.middle_name else ""
-        last_name = obj.last_name.upper()
+        last_name = obj.last_name.capitalize()
         full_name = f"{first_name} {middle_name} {last_name}".strip()
         return full_name
     
