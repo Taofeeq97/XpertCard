@@ -221,21 +221,6 @@ class VerifyVerificationCode(APIView):
 
 
 class SetPasswordApiView(generics.UpdateAPIView):
-    serializer_class = ResetPasswordSerializer
-
-    def update(self, request, *args, **kwargs):
-        email = self.get_serializer['email']
-        password = self.get_serializer['password']
-        user = CustomAdminUser.objects.get(email = email)
-        self.perform_update(user.set_password(password))
-        response = {
-            "message":"new password set successfully"
-        }
-        return Response(response, status=status.HTTP_200_OK)
-
-
-class SetPasswordApiView(generics.UpdateAPIView):
-
     """
     An endpoint to set new password
 

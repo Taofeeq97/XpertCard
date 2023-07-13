@@ -8,9 +8,13 @@ from django_elasticsearch_dsl_drf.filter_backends import (
     OrderingFilterBackend,
     CompoundSearchFilterBackend
 )
+
 # from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
+from django_filters import rest_framework
 from rest_framework import generics, status
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 
 # Local application or project-specific imports
 from .activitylogmixin import ActivityLogMixin
@@ -117,55 +121,29 @@ class ActiveExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     serializer_class = ExpertCardSerializer
 
 
-# class CardTypeExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
-#     """
-#     An endpoint to Access 
-#     Authentication is required
+class ExpertCardFilter(rest_framework.FilterSet):
+    card_type = rest_framework.CharFilter(lookup_expr='icontains')
 
-#     """
-#     card_type  = self.request.query_params.get('card_type')
-#     queryset=ExpertCard.objects.filter(card_type=card_type, is_active=True, is_deleted = False).order_by('-created_date')
-#     pagination_class = StandardResultPagination
-#     permission_classes = [AdminOrTrustedUserOnly]
-#     serializer_class = ExpertCardSerializer
+    class Meta:
+        model = ExpertCard
+        fields = ['card_type']
 
 
 class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     """
     An endpoint to access the ExpertCard List.
     Authentication is required.
-    with search functionalities using first name, last_name, email or card_type
+    with search functionalities using first name, last_name, email, or card_type
     """
     queryset = ExpertCard.objects.filter(is_deleted=False).order_by('-created_date')
     pagination_class = StandardResultPagination
     permission_classes = [AdminOrTrustedUserOnly]
     serializer_class = ExpertCardSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = ExpertCardFilter
+    search_fields = ['first_name', 'last_name', 'email']
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        search_query = self.request.query_params.get('search_query')
-        card_type  = self.request.query_params.get('card_type')
 
-        if card_type and search_query:
-            queryset = queryset.filter(
-                Q(card_type__icontains = card_type) and
-                Q(first_name__icontains=search_query) |
-                Q(last_name__icontains=search_query) |
-                Q(email__icontains=search_query)
-            )
-        if card_type:
-            queryset = queryset.filter(
-                Q(card_type__icontains = card_type)
-            )
-
-        if search_query:
-            queryset = queryset.filter(
-                Q(first_name__icontains=search_query) |
-                Q(last_name__icontains=search_query) |
-                Q(email__icontains=search_query)
-            )
-
-        return queryset
 
 
 class ExpertCardCreateApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.CreateAPIView):
