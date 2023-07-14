@@ -11,9 +11,9 @@ from django_elasticsearch_dsl_drf.filter_backends import (
 
 # from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from django_filters import rest_framework
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
 # Local application or project-specific imports
@@ -162,8 +162,6 @@ class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = ExpertCardFilter
     search_fields = ['first_name', 'last_name', 'email']
-
-
 
 
 class ExpertCardCreateApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.CreateAPIView):

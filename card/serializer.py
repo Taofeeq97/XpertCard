@@ -4,10 +4,10 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 # Local imports
-from .models import ExpertCard, CompanyAddress, ActivityLog
-from .utils import generate_qr_code
 from admin_account.models import CustomAdminUser
 from admin_account.serializers import CreateCustomAdminUserSerializer
+from .models import ExpertCard, CompanyAddress, ActivityLog
+from .utils import generate_qr_code
 
 
 class CompanyAddressSerializer(serializers.ModelSerializer):
@@ -21,7 +21,6 @@ class CompanyAddressSerializer(serializers.ModelSerializer):
         if CompanyAddress.objects.filter(address_title=value).exists():
             raise serializers.ValidationError('Inputed company title already exists')
         return value
-   
 
     def validate(self, attrs):
         latitude = attrs['latitude']

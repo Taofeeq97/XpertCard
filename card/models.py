@@ -40,20 +40,26 @@ CARD_TYPE_CHOICES = (
     )
 
 class ExpertCard(BaseModel):
-    first_name=models.CharField(max_length=225)
+    first_name = models.CharField(max_length=225)
     middle_name = models.CharField(max_length=225, null=True, blank=True)
-    last_name= models.CharField(max_length=225)
+    last_name = models.CharField(max_length=225)
     email = models.EmailField(unique=True)
-    profile_picture = models.ImageField(upload_to='media', validators=[ ValidateimageSize])
-    role = models.CharField(max_length=100,)
+    profile_picture = models.ImageField(upload_to='media', validators=[ValidateimageSize])
+    role = models.CharField(max_length=100)
     qr_code = models.ImageField(upload_to='qr_code', null=True, blank=True)
-    tribe = models.CharField(max_length=100,)
+    tribe = models.CharField(max_length=100)
     company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True)
     address_title = models.CharField(max_length=255, blank=True, null=True)
     card_type = models.CharField(max_length=100, choices=CARD_TYPE_CHOICES, null=True, blank=True)
-    phone_number = PhoneNumberField()
+    phone_number = PhoneNumberField()  # Make the phone_number field optional
 
-    
+    def save(self, *args, **kwargs):
+        if self.pk:  # Check if the instance already exists (updating)
+            old_instance = ExpertCard.objects.get(pk=self.pk)
+            if self.email != old_instance.email:  # Check if the email is being updated
+                self.email = old_instance.email  # Restore the original email
+        super().save(*args, **kwargs)
+
 
     class Meta:
         indexes = [ models.Index(fields=['email'])]
