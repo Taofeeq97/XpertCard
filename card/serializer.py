@@ -1,4 +1,5 @@
 # Third-party imports
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -47,12 +48,12 @@ class ExpertCardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExpertCard
-        fields = ('retrieve_update_delete_url', 'full_name', 'first_name', 'middle_name', 'last_name', 'email','profile_picture', 'role', 'tribe','qr_code', 'company_address', 'address', 'card_type','phone_number', 'created_date', 'is_active')
-        read_only_fields = ('qr_code', 'address','is_active')
+        fields = ('retrieve_update_delete_url', 'full_name', 'first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'role', 'tribe', 'qr_code', 'company_address', 'address', 'address_title', 'card_type', 'phone_number', 'created_date', 'is_active')
+        read_only_fields = ('qr_code', 'address', 'is_active', 'address_title')
         extra_kwargs = {
             'company_address': {'write_only': True},
             'created_date': {'read_only': True},
-            'qr_code': {'read_only': True},       
+            'qr_code': {'read_only': True},
         }
 
     def validate_email(self, value):
@@ -86,15 +87,18 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         return url
 
     def create(self, validated_data):
+        validated_data['address_title'] = validated_data['company_address'].address_title
         qr_code = generate_qr_code(validated_data)
-        validated_data['qr_code']=qr_code
+        validated_data['qr_code'] = qr_code
         return super().create(validated_data)
-    
+
+
     def update(self, instance, validated_data):
         first_name = validated_data.get('first_name', instance.first_name)
         last_name = validated_data.get('last_name', instance.last_name)
         email = validated_data.get('email', instance.email)
         phone_number = validated_data.get('phone_number', instance.phone_number)
+        address_title = validated_data.get('address_title', instance.address_title)
         role = validated_data.get('phone_number', instance.role)
         tribe = validated_data.get('phone_number', instance.tribe)
         updated_data = {
@@ -102,10 +106,12 @@ class ExpertCardSerializer(serializers.ModelSerializer):
             'last_name': last_name,
             'email': email,
             'phone_number': phone_number,
+            'address_title':address_title,
             'tribe':tribe,
             'role':role
         }
         qr_code = generate_qr_code(updated_data)
+    
         validated_data['qr_code'] = qr_code
         return super().update(instance, validated_data)
 
@@ -138,6 +144,7 @@ class ActivityLogSerializer(serializers.ModelSerializer):
 
 class ExpertCardIdsSerializer(serializers.Serializer):
     expert_card_ids = serializers.ListField(child=serializers.IntegerField())
+
 
 
 # class ExpertCardElasticSearchSerializer(serializers.Serializer):

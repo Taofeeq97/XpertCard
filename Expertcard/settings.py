@@ -269,17 +269,16 @@ SECRET_KEY_BROKER = os.getenv('AWS_S3_SECRET_ACCESS_KEY')
 #celerybeat configuration
 CELERY_BROKER_URL = f"sqs://{ACCESS_KEY}:{SECRET_KEY_BROKER}@"
 
-BROKER_TRANSPORT_OPTIONS = {
-    'region': 'us-east-1',  # Replace with your desired AWS region
-    'queue_name_prefix': 'expertcard_queue',
-}
-CELERY_DEFAULT_QUEUE = 'expertcard_queue'
+CELERY_BROKER_URL = 'redis://default:LPsoopdYJGC18IRnKx1E@containers-us-west-119.railway.app:5868'
+
 CELERY_ACCEPT_CONTENT = ['application/json']
+
 CELERY_RESULT_SERIALIZER = 'json'
+
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_BROKER_TRANSPORT_OPTIONS =BROKER_TRANSPORT_OPTIONS
+
 CELERY_TIMEZONE = 'Africa/Lagos'
-CELERY_TASK_ACCEPT_CONTENT = 'expertcard_queue'
+
 
 #aws s3 bucket configuration
 AWS_QUERYSTRING_AUTH= False

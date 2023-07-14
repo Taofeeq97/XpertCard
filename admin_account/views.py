@@ -122,8 +122,8 @@ class ForgotPasswordApiView(APIView):
                 mail_subject = "Password Reset Verification Code"
                 message = f"Hi {user.username},\n\n" \
                           f"Please use the following verification code to reset your password: {verification_code}"
-                send_mail(subject = mail_subject, message = message, from_email= EMAIL_HOST_USER, recipient_list=[user.email])
-                # send_email_fun.delay(subject = mail_subject, message = message, sender = EMAIL_HOST_USER, receiver=user.email)
+                # send_mail(subject = mail_subject, message = message, from_email= EMAIL_HOST_USER, recipient_list=[user.email])
+                send_email_fun.delay(subject = mail_subject, message = message, sender = EMAIL_HOST_USER, receiver=user.email)
                 return Response({"status": "success", "message": "We have sent a password-reset verification code to the email you provided. Please check and reset  "},status=status.HTTP_200_OK)
             else:
                 return Response({"status": "error", "message": "The email provided doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)

@@ -34,6 +34,7 @@ from .serializer import (
     # ExpertCardElasticSearchSerializer
 )
 
+from .utils import generate_qr_code
 # Create your views here.
 
 
@@ -93,11 +94,30 @@ class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.R
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        response = {
-            "message": "Address updated successfully",
-        }
-        return Response(response, status=status.HTTP_200_OK)
+        updated_instance = serializer.save()
+
+        # Check if the address_title field is present in validated_data
+        if 'address_title' in serializer.validated_data:
+            new_address_title = serializer.validated_data['address_title']
+            expert_cards = ExpertCard.objects.filter(company_address=instance)
+            expert_cards.update(address_title=new_address_title)
+
+            # Generate QR code for each updated ExpertCard
+            for expert_card in expert_cards:
+                data = {
+                    'first_name': expert_card.first_name,
+                    'last_name': expert_card.last_name,
+                    'email': expert_card.email,
+                    'address_title': new_address_title,
+                    'role': expert_card.role,
+                    'phone_number': expert_card.phone_number,
+                }
+                expert_card.qr_code = generate_qr_code(data)
+                expert_card.save() 
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

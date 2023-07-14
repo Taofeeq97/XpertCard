@@ -1,2 +1,2 @@
-web: python manage.py migrate && python manage.py collectstatic --no-input && gunicorn Expertcard.wsgi:application
+web: python manage.py migrate && python manage.py collectstatic --no-input && celery -A ExpertCard worker --loglevel=info && gunicorn Expertcard.wsgi:application
 

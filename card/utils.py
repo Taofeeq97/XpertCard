@@ -1,18 +1,14 @@
-# Standard library imports
 from io import BytesIO
-
-# Third-party imports
 import qrcode
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
-
 
 def generate_qr_code(data):
     vcard = f"BEGIN:VCARD\nVERSION:3.0\n" \
             f"N:{data['last_name']};{data['first_name']}\n" \
             f"EMAIL:{data['email']}\n" \
             f"TEL:{data['phone_number']}\n" \
-            f"ORG:{'AFEX'}\n" \
+            f"ORG:{'AFEX,' + data['address_title']}\n" \
             f"TITLE:{data['role']}\n" \
             f"END:VCARD"
     qr = qrcode.QRCode(
@@ -28,3 +24,5 @@ def generate_qr_code(data):
     qr_img.save(png_io, format='PNG')
     qr_code = ContentFile(png_io.getvalue(), f"{slugify(data['email'])}.png")
     return qr_code
+
+
