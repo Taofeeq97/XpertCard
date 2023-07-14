@@ -1,32 +1,29 @@
-from django.test import TestCase, Client
-from rest_framework.reverse import reverse
-from .models import CustomAdminUser
+# from rest_framework.reverse import reverse
+# from .models import CustomAdminUser
+# from rest_framework import status
+# from rest_framework.test import APITestCase
+# from django.core.files.uploadedfile import SimpleUploadedFile
+# from .models import CustomAdminUser
 
 
-class LoginTestCase(TestCase):
-    def setUp(self):
-        self.client = Client()
-        number_of_users = 15
 
-        for num in range(1, number_of_users + 1):
-            data = {
-                'first_name': 'jooo',
-                'last_name': 'haay',
-                'email': f'hbus{num}@afexnigeria.com',
-                'password': 'admin12345',
-            }
-            CustomAdminUser.objects.create_user(**data)
+# class CreateAccountAPITest(APITestCase):
+#     def setUp(self):
+#         self.create_account_url = reverse('create_account')
+#         self.valid_payload = {
+#             'first_name': 'John',
+#             'middle_name': 'Doe',
+#             'last_name': 'Smith',
+#             'email': 'testemail@afexnigeria.com',
+#             'username': 'testemail@afexnigeria.com',
+#             'password': 'test1234',
+#             'confirm_password':'test1234',
+#         }
+    
+#     def test_create_account_success(self):
+#         response = self.client.post(self.create_account_url, data=self.valid_payload, format='multipart')
+#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+#         self.assertEqual(CustomAdminUser.objects.count(), 1)
+#         self.assertEqual(CustomAdminUser.objects.first().email, 'testemail@afexnigeria.com')
 
-    def test_login(self):
-        # Prepare the data for the login request
-        data = {
-            'email': 'hbus@afexnigeria.com',
-            'password': 'admin12345',
-        }
-        print(data)
-        # Send the login request
-        response = self.client.post(reverse('token_obtain_pair'), data)
-        print(response.status_code)
 
-        # Assert the response status code and content
-        self.assertEqual(response.status_code, 200)

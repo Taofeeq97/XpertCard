@@ -102,7 +102,7 @@ class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.R
             expert_cards = ExpertCard.objects.filter(company_address=instance)
             expert_cards.update(address_title=new_address_title)
 
-            # Generate QR code for each updated ExpertCard
+            # Generate QR code for each updated ExpertCard associated with the new card title
             for expert_card in expert_cards:
                 data = {
                     'first_name': expert_card.first_name,
@@ -114,7 +114,6 @@ class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.R
                 }
                 expert_card.qr_code = generate_qr_code(data)
                 expert_card.save() 
-
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

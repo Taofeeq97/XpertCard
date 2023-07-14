@@ -48,7 +48,7 @@ class ExpertCardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExpertCard
-        fields = ('retrieve_update_delete_url', 'full_name', 'first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'role', 'tribe', 'qr_code', 'company_address', 'address', 'address_title', 'card_type', 'phone_number', 'created_date', 'is_active')
+        fields = ('id', 'retrieve_update_delete_url', 'full_name', 'first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'role', 'tribe', 'qr_code', 'company_address', 'address', 'address_title', 'card_type', 'phone_number', 'created_date', 'is_active')
         read_only_fields = ('qr_code', 'address', 'is_active', 'address_title')
         extra_kwargs = {
             'company_address': {'write_only': True},
