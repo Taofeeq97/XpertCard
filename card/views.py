@@ -213,26 +213,6 @@ class ExpertCardRetrieveUpdateDeleteApiView(ActivityLogMixin, generics.RetrieveU
         return Response(response, status=status.HTTP_204_NO_CONTENT)
 
 
-# class BulkActivateExpertCardApiView(generics.UpdateAPIView):
-#     """
-#     An endpoint to Bulk Update cards
-#     Authentication is required
-
-#     """
-#     queryset = ExpertCard.objects.all()
-#     permission_classes = [AdminOrTrustedUserOnly]
-#     serializer_class = ExpertCardIdsSerializer
-
-#     def update(self, request, *args, **kwargs):
-#         expert_card_ids = request.data.get('expert_card_ids', [])
-#         expert_cards = ExpertCard.objects.filter(id__in=expert_card_ids)
-#         expert_cards.update(is_active=True)
-#         response = {
-#             "message": "Cards Activated Successfully"
-#         }
-#         return Response(response, status=status.HTTP_200_OK)
-    
-
 class BulkActivateExpertCardApiView(generics.UpdateAPIView):
     """
     An endpoint to Bulk Update cards
