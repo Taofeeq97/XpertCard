@@ -7,3 +7,4 @@ class CardConfig(AppConfig):
 
     def ready(self):
         import card.signals
+        

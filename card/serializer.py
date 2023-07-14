@@ -134,6 +134,10 @@ class ActivityLogSerializer(serializers.ModelSerializer):
         if content_type is not None:
             return content_type.model
         return None
+    
+
+class ExpertCardIdsSerializer(serializers.Serializer):
+    expert_card_ids = serializers.ListField(child=serializers.IntegerField())
 
 
 # class ExpertCardElasticSearchSerializer(serializers.Serializer):
