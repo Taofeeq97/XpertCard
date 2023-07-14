@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.timesince import timesince
 from django.utils import timezone
+from rest_framework.serializers import ValidationError
 
 # Third-party imports
 from phonenumber_field.modelfields import PhoneNumberField
@@ -51,13 +52,19 @@ class ExpertCard(BaseModel):
     company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True)
     address_title = models.CharField(max_length=255, blank=True, null=True)
     card_type = models.CharField(max_length=100, choices=CARD_TYPE_CHOICES, null=True, blank=True)
-    phone_number = PhoneNumberField()  # Make the phone_number field optional
+    phone_number = PhoneNumberField()
 
-    def save(self, *args, **kwargs):
+    def clean(self):
+        super().clean()
         if self.pk:  # Check if the instance already exists (updating)
             old_instance = ExpertCard.objects.get(pk=self.pk)
             if self.email != old_instance.email:  # Check if the email is being updated
-                self.email = old_instance.email  # Restore the original email
+                email_exists = ExpertCard.objects.filter(email=self.email).exists()
+                if email_exists:
+                    raise ValidationError("Email already exists.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()  # Run clean() method before saving
         super().save(*args, **kwargs)
 
 
