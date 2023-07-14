@@ -83,6 +83,16 @@ CSRF_TRUSTED_ORIGINS = ['https://web-production-5804.up.railway.app','https://we
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+
+
 PHONENUMBER_DEFAULT_REGION = None
 PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
 
