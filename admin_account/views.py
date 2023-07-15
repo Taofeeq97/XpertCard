@@ -113,10 +113,9 @@ class ForgotPasswordApiView(APIView):
             if CustomAdminUser.objects.filter(email__exact=email).exists():
                 user = CustomAdminUser.objects.get(email=email)
                 
-                # Generate a 6-character verification code
-                verification_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+                verification_code = ''.join(random.choices(string.digits, k=6))
                 print(verification_code)
-                user.verification_code =verification_code
+                user.verification_code = int(verification_code)
                 
                 # Send the verification code to the user's email
                 mail_subject = "Password Reset Verification Code"
