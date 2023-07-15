@@ -1,40 +1,32 @@
 # Standard library imports
-# from elasticsearch_dsl import Q
 from django.db.models import Q
 
-# # Third-party imports
+# Third-party imports
 from django_elasticsearch_dsl_drf.filter_backends import (
+    CompoundSearchFilterBackend,
     FilteringFilterBackend,
-    OrderingFilterBackend,
-    CompoundSearchFilterBackend
+    OrderingFilterBackend
 )
-
-# from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from django_filters import rest_framework
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
-from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
+from rest_framework.response import Response
 
 # Local application or project-specific imports
 from .activitylogmixin import ActivityLogMixin
 from .document import ExpertCardDocument
-from .models import (
-    CompanyAddress,
-    ExpertCard,
-    ActivityLog
-)
+from .models import ActivityLog, CompanyAddress, ExpertCard
 from .pagination import StandardResultPagination
 from .permissions import AdminOrTrustedUserOnly
 from .serializer import (
-    CompanyAddressSerializer,
-    ExpertCardSerializer,
     ActivityLogSerializer,
+    CompanyAddressSerializer,
     ExpertCardIdsSerializer,
-    # ExpertCardElasticSearchSerializer
+    ExpertCardSerializer,
 )
-
 from .utils import generate_qr_code
+
 # Create your views here.
 
 

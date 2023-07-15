@@ -1,32 +1,30 @@
+# Python standard library imports
+import random
+import string
+import threading
+
 # Django imports
-from django.shortcuts import render
-from django.urls import reverse
 from django.core.mail import send_mail
 
 # Third-party imports
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import generics, status
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 # Local imports
 from Expertcard.settings import EMAIL_HOST_USER
+from .models import CustomAdminUser
 from .serializers import (
-    LoginSerializer,
     CreateCustomAdminUserSerializer,
     EmailResetPasswordSerializer,
+    LoginSerializer,
     ResetPasswordSerializer,
 )
-from .models import CustomAdminUser
 from .tasks import send_email_fun
 from .utils import clear_verification_code
-
-# Python standard library imports
-import random
-import string
-import threading
 
 
 

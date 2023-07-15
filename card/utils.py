@@ -1,7 +1,8 @@
-from io import BytesIO
 import qrcode
+from io import BytesIO
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
+
 
 def generate_qr_code(data):
     vcard = f"BEGIN:VCARD\nVERSION:3.0\n" \

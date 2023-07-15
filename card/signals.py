@@ -5,8 +5,6 @@ from django.contrib.auth.signals import user_logged_in, user_login_failed
 from django.utils.text import slugify
 from django.dispatch import receiver
 from django_elasticsearch_dsl.registries import registry
-
-
 # Local imports
 from .models import CompanyAddress, ActivityLog
 from .models import LOGIN, LOGIN_FAILED
