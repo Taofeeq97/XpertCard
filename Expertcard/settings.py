@@ -85,7 +85,6 @@ CORS_ORIGIN_WHITELIST = ('https://web-production-5804.up.railway.app', 'https://
 
 
 
-
 PHONENUMBER_DEFAULT_REGION = None
 PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
 

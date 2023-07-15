@@ -148,7 +148,9 @@ class SetPasswordApiView(generics.UpdateAPIView):
         new_password = serializer.validated_data['new_password']
         user = CustomAdminUser.objects.get(email=email)
         user.set_password(new_password)
+        print(user)
         user.save()   
+        print(user)
         return Response({"status": "success", "message": "Password set successfully"}, status=status.HTTP_200_OK)
 
         
