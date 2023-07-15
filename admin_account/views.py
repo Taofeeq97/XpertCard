@@ -21,11 +21,12 @@ from .serializers import (
 )
 from .models import CustomAdminUser
 from .tasks import send_email_fun
+from .utils import clear_verification_code
 
 # Python standard library imports
 import random
 import string
-import base64
+import threading
 
 
 
@@ -99,12 +100,14 @@ class CreateAdminUserApiView(generics.CreateAPIView):
 
 
 class ForgotPasswordApiView(APIView):
-
     """
-    An endpoint to generate verification code
-
+    An endpoint to generate a verification code
     """
     serializer_class = EmailResetPasswordSerializer
+
+    def clear_verification_code(self, user):
+        user.verification_code = ''
+        user.save()
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -112,23 +115,33 @@ class ForgotPasswordApiView(APIView):
             email = serializer.validated_data['email']
             if CustomAdminUser.objects.filter(email__exact=email).exists():
                 user = CustomAdminUser.objects.get(email=email)
-                
+
                 verification_code = ''.join(random.choices(string.digits, k=6))
                 print(verification_code)
                 user.verification_code = int(verification_code)
-                
+                user.save()
+
+                # Set a timer for 1 minute
+                timer = threading.Timer(180, self.clear_verification_code, args=[user])
+                timer.start()
+
                 # Send the verification code to the user's email
                 mail_subject = "Password Reset Verification Code"
                 message = f"Hi {user.username},\n\n" \
                           f"Please use the following verification code to reset your password: {verification_code}"
-                send_mail(subject = mail_subject, message = message, from_email= EMAIL_HOST_USER, recipient_list=[user.email])
-                # send_email_fun.delay(subject = mail_subject, message = message, sender = EMAIL_HOST_USER, receiver=user.email)
-                return Response({"status": "success", "message": "We have sent a password-reset verification code to the email you provided. Please check and reset  "},status=status.HTTP_200_OK)
+                send_mail(subject=mail_subject, message=message, from_email=EMAIL_HOST_USER, recipient_list=[user.email])
+
+                return Response({
+                    "status": "success",
+                    "message": "We have sent a password-reset verification code to the email you provided. Please check and reset, kindly do so within 3 minute as the OTP expires."
+                }, status=status.HTTP_200_OK)
             else:
-                return Response({"status": "error", "message": "The email provided doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    "status": "error",
+                    "message": "The email provided doesn't exist"
+                }, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 
@@ -213,7 +226,7 @@ class VerifyVerificationCode(APIView):
         try:
             user = CustomAdminUser.objects.get(verification_code=verification_code)
         except CustomAdminUser.DoesNotExist:
-            return Response({"status": "fail", "message": "Invalid verification code"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"status": "fail", "message": "Invalid or Expired verification code"}, status=status.HTTP_400_BAD_REQUEST)
         # Reset the verification code after successful verification
         user.verification_code = ''
         user.save()
