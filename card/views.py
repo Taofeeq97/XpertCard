@@ -270,7 +270,7 @@ class VCardAPIView(generics.RetrieveAPIView):
                 f"ORG:AFEX,{instance.address_title}\n" \
                 f"TITLE:{instance.role}\n" \
                 f"END:VCARD"
-
+        print(vcard)
         response = Response(vcard, content_type='text/vcard')
         response['Content-Disposition'] = f'attachment; filename="{instance.email}.vcf"'
         return response
