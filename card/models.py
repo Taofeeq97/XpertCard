@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.core.validators import FileExtensionValidator
 from django.utils.timesince import timesince
 from django.utils import timezone
 from rest_framework.serializers import ValidationError
@@ -49,6 +50,7 @@ class ExpertCard(BaseModel):
     role = models.CharField(max_length=100)
     qr_code = models.ImageField(upload_to='qr_code', null=True, blank=True)
     tribe = models.CharField(max_length=100)
+    card_vcf = models.FileField(null=True,blank=True, validators=[FileExtensionValidator(allowed_extensions=['vcf']),], upload_to='media')
     company_address = models.ForeignKey('CompanyAddress', on_delete=models.SET_NULL, null=True)
     address_title = models.CharField(max_length=255, blank=True, null=True)
     card_type = models.CharField(max_length=100, choices=CARD_TYPE_CHOICES, null=True, blank=True)

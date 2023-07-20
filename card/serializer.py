@@ -1,7 +1,7 @@
 # Third-party imports
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from django.utils.text import slugify
 
 # Local imports
 from admin_account.models import CustomAdminUser
@@ -47,8 +47,8 @@ class ExpertCardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExpertCard
-        fields = ('id', 'retrieve_update_delete_url', 'full_name', 'first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'role', 'tribe', 'qr_code', 'company_address', 'address', 'address_title', 'card_type', 'phone_number', 'created_date', 'is_active')
-        read_only_fields = ('qr_code', 'address', 'is_active', 'address_title')
+        fields = ('id', 'retrieve_update_delete_url', 'full_name', 'first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'role', 'tribe','card_vcf', 'qr_code', 'company_address', 'address', 'address_title', 'card_type', 'phone_number', 'created_date', 'is_active')
+        read_only_fields = ('qr_code', 'address', 'card_vcf','is_active', 'address_title')
         extra_kwargs = {
             'company_address': {'write_only': True},
             'created_date': {'read_only': True},
@@ -87,8 +87,12 @@ class ExpertCardSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['address_title'] = validated_data['company_address'].address_title
-        qr_code = generate_qr_code(validated_data)
-        validated_data['qr_code'] = qr_code
+        request = self.context.get('request')
+        qr_code_image, vcard_file = generate_qr_code(validated_data, request)
+
+        # Save the QR code image in the QR code field
+        validated_data['qr_code'] = qr_code_image
+        validated_data['card_vcf'] = vcard_file
         return super().create(validated_data)
 
 
@@ -100,19 +104,26 @@ class ExpertCardSerializer(serializers.ModelSerializer):
         address_title = validated_data.get('address_title', instance.address_title)
         role = validated_data.get('phone_number', instance.role)
         tribe = validated_data.get('phone_number', instance.tribe)
+        
+        # Prepare the updated_data dictionary
         updated_data = {
             'first_name': first_name,
             'last_name': last_name,
             'email': email,
             'phone_number': phone_number,
-            'address_title':address_title,
-            'tribe':tribe,
-            'role':role
+            'address_title': address_title,
+            'tribe': tribe,
+            'role': role
         }
-        qr_code = generate_qr_code(updated_data)
-    
-        validated_data['qr_code'] = qr_code
-        return super().update(instance, validated_data)
+        
+        # Generate the QR code and save the QR code image to a file
+        qr_code_image, vcard_file = generate_qr_code(updated_data, self.context['request'])
+        instance.qr_code.save(f"{slugify(email)}.png", qr_code_image, save=False)
+        instance.card_vcf.save(f"{slugify(email)}.vcf", vcard_file, save=False)
+        
+        # Save the instance with the updated fields
+        instance.save()
+        return instance
 
 
 class ActivityLogSerializer(serializers.ModelSerializer):
