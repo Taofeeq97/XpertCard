@@ -108,7 +108,6 @@ class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.R
 
                 # Generate the new QR code and update the qr_code field
                 qr_code_image, vcard_file = generate_qr_code(data)
-                expert_card.qr_code.save(f"{slugify(expert_card.email)}.png", qr_code_image, save=False)
                 expert_card.card_vcf.save(f"{slugify(expert_card.email)}.vcf", vcard_file, save=False)
                 expert_card.save()  # Save each individual expert_card
 
