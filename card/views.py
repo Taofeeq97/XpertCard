@@ -9,6 +9,7 @@ from django_elasticsearch_dsl_drf.filter_backends import (
 )
 from django_filters import rest_framework
 from django_filters.rest_framework import DjangoFilterBackend
+from django.utils.text import slugify
 from rest_framework import generics, status
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
@@ -104,8 +105,13 @@ class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.R
                     'role': expert_card.role,
                     'phone_number': expert_card.phone_number,
                 }
-                expert_card.qr_code = generate_qr_code(data)
-                expert_card.save() 
+
+                # Generate the new QR code and update the qr_code field
+                qr_code_image, vcard_file = generate_qr_code(data)
+                expert_card.qr_code.save(f"{slugify(expert_card.email)}.png", qr_code_image, save=False)
+                expert_card.card_vcf.save(f"{slugify(expert_card.email)}.vcf", vcard_file, save=False)
+                expert_card.save()  # Save each individual expert_card
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

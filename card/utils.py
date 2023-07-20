@@ -42,7 +42,7 @@ def create_vcf_file(data):
             f"END:VCARD"
     return vcard.encode('utf-8')  # Encode the string as bytes
 
-def generate_qr_code(data, request):
+def generate_qr_code(data):
     vcard_content = create_vcf_file(data)
 
     # Save the vCard (.vcf) data to a file
