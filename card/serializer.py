@@ -87,14 +87,10 @@ class ExpertCardSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['address_title'] = validated_data['company_address'].address_title
-        instance = super().create(validated_data)
-        request = self.context.get('request')
-        # Regenerate the QR code using the newly created instance's ID
-        qr_code_image = generate_qr_code(instance.id, request)
-        instance.qr_code = qr_code_image
-        instance.save()
-        return instance
-        
+        qr_code = generate_qr_code(validated_data)
+        validated_data['qr_code'] = qr_code
+        return super().create(validated_data)
+
 
     def update(self, instance, validated_data):
         first_name = validated_data.get('first_name', instance.first_name)
@@ -114,6 +110,7 @@ class ExpertCardSerializer(serializers.ModelSerializer):
             'role':role
         }
         qr_code = generate_qr_code(updated_data)
+    
         validated_data['qr_code'] = qr_code
         return super().update(instance, validated_data)
 
