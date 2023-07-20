@@ -14,7 +14,8 @@ urlpatterns = [
     path('expert_cards/create/', views.ExpertCardCreateApiView.as_view(), name='expert_card_create'),
     path('expert_cards/bulk_activate/', views.BulkActivateExpertCardApiView.as_view(), name='expert_card_create'),
     path('expert_cards/<int:expert_id>/', views.ExpertCardRetrieveUpdateDeleteApiView.as_view(), name='expert_card_detail_create_update_delete'),
-    path('activity_log/', views.ActivityLogAPIView.as_view(), name='activity_log')
+    path('activity_log/', views.ActivityLogAPIView.as_view(), name='activity_log'),
+    path('expertcard_vcf/<int:pk>/', views.VCardAPIView.as_view(), name='vcard_view'),
     
 ]
 

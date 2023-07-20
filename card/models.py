@@ -129,8 +129,20 @@ class ActivityLog(models.Model):
         time_difference = timezone.now() - self.action_time
         if time_difference.total_seconds() < 60:
             return "now"
-        return f" {timesince(self.action_time, timezone.now())} ago"
-
+        elif time_difference.total_seconds() < 3600:  # Less than 1 hour (60 minutes)
+            return f"{int(time_difference.total_seconds() / 60)} minutes ago"
+        elif time_difference.total_seconds() < 86400:  # Less than 1 day (24 hours)
+            hours = int(time_difference.total_seconds() / 3600)
+            if hours == 1:
+                return "1 hour ago"
+            else:
+                return f"{hours} hours ago"
+        else:
+            days = int(time_difference.total_seconds() / 86400)
+            if days == 1:
+                return "1 day ago"
+            else:
+                return f"{days} days ago"
 
 
 

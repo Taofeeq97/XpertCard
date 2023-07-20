@@ -17,7 +17,7 @@ from rest_framework.response import Response
 from .activitylogmixin import ActivityLogMixin
 from .document import ExpertCardDocument
 from .models import ActivityLog, CompanyAddress, ExpertCard
-from .pagination import StandardResultPagination
+from .pagination import StandardResultPagination, ActivityLogPagination
 from .permissions import AdminOrTrustedUserOnly
 from .serializer import (
     ActivityLogSerializer,
@@ -251,8 +251,29 @@ class ActivityLogAPIView(generics.ListAPIView):
     """
     pagination_class = StandardResultPagination
     permission_classes = [AdminOrTrustedUserOnly]
-    queryset = ActivityLog.objects.filter(status='Success', action_type__in=['Create', 'Update'])
+    queryset = ActivityLog.objects.filter(status='Success', action_type__in=['Create', 'Update', 'Delete'])
     serializer_class = ActivityLogSerializer
+
+
+class VCardAPIView(generics.RetrieveAPIView):
+    queryset = ExpertCard.objects.all()
+    serializer_class = ExpertCardSerializer
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Generate the vCard content
+        vcard = f"BEGIN:VCARD\nVERSION:3.0\n" \
+                f"N:{instance.last_name};{instance.first_name}\n" \
+                f"EMAIL:{instance.email}\n" \
+                f"TEL:{instance.phone_number}\n" \
+                f"ORG:AFEX,{instance.address_title}\n" \
+                f"TITLE:{instance.role}\n" \
+                f"END:VCARD"
+
+        response = Response(vcard, content_type='text/vcard')
+        response['Content-Disposition'] = f'attachment; filename="{instance.email}.vcf"'
+        return response
     
 
 

@@ -149,6 +149,6 @@ class SetPasswordApiView(generics.UpdateAPIView):
         print(user)
         user.save()   
         print(user)
-        return Response({"status": "success", "message": "Password set successfully"}, status=status.HTTP_200_OK)
+        return Response({"status": "success", "message": "Password reset successfully"}, status=status.HTTP_200_OK)
 
         
