@@ -116,8 +116,18 @@ class ExpertCardSerializer(serializers.ModelSerializer):
             'tribe': tribe,
             'role': role
         }
+
+        # Update the instance fields with the new data
+        instance.first_name = first_name
+        instance.last_name = last_name
+        instance.email = email
+        instance.phone_number = phone_number
+        instance.address_title = address_title
+        instance.role = role
+        instance.tribe = tribe
         card_vcf = create_vcf_file(updated_data)
         instance.card_vcf.save(f"{slugify(email)}.vcf", card_vcf, save=False)
+    
         
         # Save the instance with the updated fields
         instance.save()

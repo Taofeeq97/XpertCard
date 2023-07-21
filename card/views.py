@@ -259,46 +259,6 @@ class ActivityLogAPIView(generics.ListAPIView):
     serializer_class = ActivityLogSerializer
 
 
-# class VCardAPIView(generics.RetrieveAPIView):
-#     queryset = ExpertCard.objects.all()
-#     serializer_class = ExpertCardSerializer
-
-#     def get(self, request, *args, **kwargs):
-#         instance = self.get_object()
-
-#         # Generate the vCard content
-#         vcard = f"BEGIN:VCARD\nVERSION:3.0\n" \
-#                 f"N:{instance.last_name};{instance.first_name}\n" \
-#                 f"EMAIL:{instance.email}\n" \
-#                 f"TEL:{instance.phone_number}\n" \
-#                 f"ORG:AFEX,{instance.address_title}\n" \
-#                 f"TITLE:{instance.role}\n" \
-#                 f"END:VCARD"
-#         print(vcard)
-#         response = Response(vcard, content_type='text/vcard')
-#         response['Content-Disposition'] = f'attachment; filename="{instance.email}.vcf"'
-#         return response
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # class ExpertCardTestListApiView(DocumentViewSet):
 #     document = ExpertCardDocument
     
