@@ -7,7 +7,7 @@ from django.utils.text import slugify
 from admin_account.models import CustomAdminUser
 from admin_account.serializers import CreateCustomAdminUserSerializer
 from .models import ExpertCard, CompanyAddress, ActivityLog
-from .utils import generate_qr_code
+from .utils import generate_qr_code, create_vcf_file
 
 
 class CompanyAddressSerializer(serializers.ModelSerializer):
@@ -88,11 +88,12 @@ class ExpertCardSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['address_title'] = validated_data['company_address'].address_title
         request = self.context.get('request')
-        qr_code_image, vcard_file = generate_qr_code(validated_data, request)
+        qr_code_image = generate_qr_code(validated_data, request)
+        card_vcf = create_vcf_file(validated_data)
 
         # Save the QR code image in the QR code field
         validated_data['qr_code'] = qr_code_image
-        validated_data['card_vcf'] = vcard_file
+        validated_data['card_vcf'] = card_vcf
         return super().create(validated_data)
 
 
@@ -115,11 +116,8 @@ class ExpertCardSerializer(serializers.ModelSerializer):
             'tribe': tribe,
             'role': role
         }
-        
-        # Generate the QR code and save the QR code image to a file
-        qr_code_image, vcard_file = generate_qr_code(updated_data, self.context['request'])
-        instance.qr_code.save(f"{slugify(email)}.png", qr_code_image, save=False)
-        instance.card_vcf.save(f"{slugify(email)}.vcf", vcard_file, save=False)
+        card_vcf = create_vcf_file(updated_data)
+        instance.card_vcf.save(f"{slugify(email)}.vcf", card_vcf, save=False)
         
         # Save the instance with the updated fields
         instance.save()

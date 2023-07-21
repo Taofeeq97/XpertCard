@@ -40,13 +40,11 @@ def create_vcf_file(data):
             f"ORG:AFEX,{data['address_title']}\n" \
             f"TITLE:{data['role']}\n" \
             f"END:VCARD"
-    return vcard.encode('utf-8')  # Encode the string as bytes
+    encoded_vcard= vcard.encode('utf-8')
+    vcard_file = ContentFile(encoded_vcard, f"{slugify(data['email'])}.vcf")
+    return vcard_file
 
 def generate_qr_code(data):
-    vcard_content = create_vcf_file(data)
-
-    # Save the vCard (.vcf) data to a file
-    vcard_file = ContentFile(vcard_content, f"{slugify(data['email'])}.vcf")
 
     qr = qrcode.QRCode(
         version=1,
@@ -66,8 +64,7 @@ def generate_qr_code(data):
     png_io = BytesIO()
     qr_img.save(png_io, format='PNG')
     qr_code_image = ContentFile(png_io.getvalue(), f"{slugify(data['email'])}.png")
-
-    return qr_code_image, vcard_file
+    return qr_code_image
 
 
 

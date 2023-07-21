@@ -26,12 +26,12 @@ from .serializer import (
     ExpertCardIdsSerializer,
     ExpertCardSerializer,
 )
-from .utils import generate_qr_code
+from .utils import generate_qr_code, create_vcf_file
 
 # Create your views here.
 
 
-class CompanyAddressListApiView(AdminOrTrustedUserOnly,generics.ListAPIView):
+class CompanyAddressListApiView(generics.ListAPIView):
     """
     An endpoint to access Company Address List
     Authentication is required
@@ -43,7 +43,7 @@ class CompanyAddressListApiView(AdminOrTrustedUserOnly,generics.ListAPIView):
     serializer_class = CompanyAddressSerializer
 
 
-class CompanyAddressCreateApiView(AdminOrTrustedUserOnly, generics.CreateAPIView):
+class CompanyAddressCreateApiView(generics.CreateAPIView):
     """
     -An endpoint to create A company Address
     -Authentication is required
@@ -64,7 +64,7 @@ class CompanyAddressCreateApiView(AdminOrTrustedUserOnly, generics.CreateAPIView
         return Response(response, status=status.HTTP_201_CREATED)
     
 
-class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.RetrieveUpdateDestroyAPIView):
+class CompanyAddressDetailUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
     """
     An endpoint to Access, Update or Delete A company Address instance
     Authentication is required
@@ -106,9 +106,8 @@ class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.R
                     'phone_number': expert_card.phone_number,
                 }
 
-                # Generate the new QR code and update the qr_code field
-                qr_code_image, vcard_file = generate_qr_code(data)
-                expert_card.card_vcf.save(f"{slugify(expert_card.email)}.vcf", vcard_file, save=False)
+                card_vcf = create_vcf_file(data=data)
+                expert_card.card_vcf.save(f"{slugify(expert_card.email)}.vcf", card_vcf, save=False)
                 expert_card.save()  # Save each individual expert_card
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -126,7 +125,7 @@ class CompanyAddressDetailUpdateDeleteApiView(AdminOrTrustedUserOnly, generics.R
         return Response(response, status=status.HTTP_204_NO_CONTENT)
     
 
-class ActiveExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
+class ActiveExpertCardListApiView(generics.ListAPIView):
     """
     An endpoint to Access ExpertCard List
     Authentication is required
@@ -146,7 +145,7 @@ class ExpertCardFilter(rest_framework.FilterSet):
         fields = ['card_type']
 
 
-class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
+class ExpertCardListApiView(generics.ListAPIView):
     """
     An endpoint to access the ExpertCard List.
     Authentication is required.
@@ -161,7 +160,7 @@ class ExpertCardListApiView(AdminOrTrustedUserOnly, generics.ListAPIView):
     search_fields = ['first_name', 'last_name', 'email']
 
 
-class ExpertCardCreateApiView(AdminOrTrustedUserOnly, ActivityLogMixin, generics.CreateAPIView):
+class ExpertCardCreateApiView(ActivityLogMixin, generics.CreateAPIView):
     """
     An endpoint to create Expertcard
     Authentication is required
