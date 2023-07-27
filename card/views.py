@@ -37,10 +37,23 @@ class CompanyAddressListApiView(generics.ListAPIView):
     Authentication is required
 
     """
-    pagination_class= StandardResultPagination
+    pagination_class = StandardResultPagination
     permission_classes = [AdminOrTrustedUserOnly]
     queryset = CompanyAddress.active_objects.all()
     serializer_class = CompanyAddressSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset =self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        response_data = {
+            'status': True,
+            'message': 'Company addresses retrieved successfully.',
+            'data': serializer.data,
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
 
 
 class CompanyAddressCreateApiView(generics.CreateAPIView):
@@ -56,12 +69,20 @@ class CompanyAddressCreateApiView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        response = {
-            "message": "Address created successfully",
-        }
-        return Response(response, status=status.HTTP_201_CREATED)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            response_data = {
+            'status': True,
+            'message': 'Company addresses created successfully.',
+            'data': serializer.data,
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
+        response_data = {
+            'status': False,
+            'data': serializer.errors,
+            }
+        return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
     
 
 class CompanyAddressDetailUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
@@ -79,8 +100,12 @@ class CompanyAddressDetailUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIV
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        data = serializer.data
-        return Response(data=data, status=status.HTTP_200_OK)
+        response_data = {
+            'status': True,
+            'message': 'Company addresses retrieved successfully.',
+            'data': serializer.data,
+        }
+        return Response(data=response_data, status=status.HTTP_200_OK)
     
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -110,19 +135,25 @@ class CompanyAddressDetailUpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIV
                 expert_card.card_vcf.save(f"{slugify(expert_card.email)}.vcf", card_vcf, save=False)
                 expert_card.save()  # Save each individual expert_card
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        response_data = {
+            'status': True,
+            'message': 'Company addresses updated successfully.',
+            'data': serializer.data,
+        }
+        return Response(data=response_data, status=status.HTTP_200_OK)
 
 
-    
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_deleted = True
         instance.is_active = False
         instance.save(update_fields=['is_deleted', 'is_active'])
-        response = {
-            "message": 'Address deleted successfully'
+
+        response_data = {
+            'status': True,
+            'message': 'Company addresses deleted successfully.',
         }
-        return Response(response, status=status.HTTP_204_NO_CONTENT)
+        return Response(data=response_data, status=status.HTTP_200_OK)
     
 
 class ActiveExpertCardListApiView(generics.ListAPIView):
