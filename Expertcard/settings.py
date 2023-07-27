@@ -75,11 +75,11 @@ MIDDLEWARE = [
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://web-production-5804.up.railway.app','https://web-production-9c5b.up.railway.app','https://expert-card.netlify.app',
-                        'http://127.0.0.1', 'http://127.0.0.1:5173', 
+                        'http://127.0.0.1', 'http://127.0.0.1:5173', 'http://127.0.0.1:63342',
                         'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000', 'http://127.0.0.1:8000']
 
 CORS_ORIGIN_WHITELIST = ('https://web-production-5804.up.railway.app', 'https://web-production-9c5b.up.railway.app', 'https://expert-card.netlify.app',
-                         'http://127.0.0.1', 'http://127.0.0.1:5173',
+                         'http://127.0.0.1', 'http://127.0.0.1:5173', 'http://127.0.0.1:63342',
                         'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost:3000', 'http://127.0.0.1:8000')
 
 # CORS_ALLOW_ALL_ORIGINS = True
