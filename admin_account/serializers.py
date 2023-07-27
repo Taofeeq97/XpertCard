@@ -6,10 +6,11 @@ from .models import CustomAdminUser
 
 class CreateCustomAdminUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    confirm_password = serializers.CharField(write_only = True, required = True)
 
     class Meta:
         model = CustomAdminUser
-        fields = ['first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'password']
+        fields = ['first_name', 'middle_name', 'last_name', 'email', 'profile_picture', 'password', 'confirm_password']
 
     def validate_email(self, value):
         if not value.endswith(('afexafricaexchange.com', 'afexafrica.com', 'afexnigeria.com')):
@@ -18,13 +19,15 @@ class CreateCustomAdminUserSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         password = data['password']
-        confirm_password = self.context['request'].data['confirm_password']
+        confirm_password = data['confirm_password']
+        # confirm_password = self.context['request'].data['confirm_password']
         if password != confirm_password:
             raise serializers.ValidationError("Passwords do not match")
         return data
 
     def create(self, validated_data):
         password = validated_data.pop('password')
+        confirm_password = validated_data.pop('confirm_password')
         validated_data['username'] = validated_data['email']
         user = CustomAdminUser(**validated_data)
         user.set_password(password)
