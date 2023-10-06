@@ -35,7 +35,7 @@ class CompanyAddressSerializer(serializers.ModelSerializer):
 
     def get_retrieve_update_delete_url(self, obj):
         request = self.context.get('request')
-        url= reverse('company_address_detail_create_update_delete', args=[str(obj.slug)], request=request)
+        url= reverse('company_address_detail_create_update_delete', args=[int(obj.id)], request=request)
         return url
 
 
